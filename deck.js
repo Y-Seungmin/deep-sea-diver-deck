@@ -24,7 +24,9 @@ function audioInit() {
   drone();
 }
 const silent = () => !AC || muted || QUIET;
-function sfx(n, vol = 0.8) { if (silent() || !cue[n]) return; const a = cue[n].cloneNode(); a.volume = vol; a.play().catch(() => {}); }
+// per-cue trim on top of each call's volume: the alarm wav is much hotter than the rest
+const TRIM = { alarm: 0.4 };
+function sfx(n, vol = 0.8) { if (silent() || !cue[n]) return; const a = cue[n].cloneNode(); a.volume = Math.min(1, vol * (TRIM[n] ?? 1)); a.play().catch(() => {}); }
 function noiseBuf(sec) { const b = AC.createBuffer(1, AC.sampleRate * sec, AC.sampleRate), x = b.getChannelData(0); for (let i = 0; i < x.length; i++) x[i] = Math.random() * 2 - 1; return b; }
 function drone() {
   const g = AC.createGain(); g.gain.value = 0; g.connect(master); g.gain.linearRampToValueAtTime(0.07, AC.currentTime + 4);
