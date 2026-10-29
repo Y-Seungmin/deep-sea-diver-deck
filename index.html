@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Deep Sea Diver — 4팀 게임 제안서</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- fallbacks for non-Windows viewers; on Windows the system faces (Bahnschrift, Malgun Gothic, Batang) win -->
+<link href="https://fonts.googleapis.com/css2?family=Saira+Condensed:wght@500;700;800&family=Noto+Sans+KR:wght@400;500;700;900&family=Nanum+Myeongjo:wght@400;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="deck.css">
+</head>
+<body>
+<div id="stage">
+  <div id="slides"></div>
+  <div id="rays"></div>
+  <canvas id="snow"></canvas>
+  <div id="hud">
+    <div class="wm">DEEP SEA DIVER</div>
+    <div class="gauge"><div class="rail"></div><div class="ticks"></div><div class="mark"><i></i><b>0 m</b></div></div>
+    <div class="cluster">
+      <div class="dp"><span class="tri">▼</span> <span class="d">0</span> m</div>
+      <div class="res">
+        <div class="rb hull">HULL<div class="seg"><i></i></div><span>100%</span></div>
+        <div class="rb fuel">FUEL<div class="seg"><i></i></div><span>100%</span></div>
+        <div class="rb codex">CODEX<span>00</span></div>
+      </div>
+    </div>
+    <div class="pg"><span class="p">01</span> / 22</div>
+  </div>
+  <div id="grain"></div>
+  <div id="vig"></div>
+  <div id="flash"></div>
+  <!-- start screen = the game's title menu -->
+  <div id="start">
+    <div class="mbg"></div><div class="caus"></div><div class="mveil"></div>
+    <div class="mlogo">
+      <div class="kk">2026 게임 세미나 &nbsp;·&nbsp; 4팀 게임 제안서</div>
+      <div class="disp">DEEP SEA<br>DIVER</div>
+      <div class="sub">딥 씨 다이버 &nbsp;—&nbsp; 끝없이 더 깊은 바다로</div>
+    </div>
+    <nav class="menu">
+      <button data-act="new"><span>NEW DIVE</span><em>처음부터 발표</em></button>
+      <button data-act="cont"><span>CONTINUE</span><em class="cpg">저장된 잠수 없음</em></button>
+      <button data-act="sound"><span>SOUND</span><em class="snd">ON</em></button>
+    </nav>
+    <div class="mfoot"><span>↑ ↓ 선택 &nbsp;·&nbsp; Enter 시작</span><span>발표 중: → / Space 다음 &nbsp;·&nbsp; ← 이전 &nbsp;·&nbsp; F 전체화면 &nbsp;·&nbsp; 숫자+Enter 이동 &nbsp;·&nbsp; M 소리</span><span>BUILD 2026.10</span></div>
+  </div>
+</div>
+<script src="lib/gsap.min.js"></script>
+<script src="lib/imgdata.js"></script>
+<script src="fx.js"></script>
+<script src="deck.js"></script>
+</body>
+</html>
