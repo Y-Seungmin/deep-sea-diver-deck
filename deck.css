@@ -9,6 +9,7 @@
 }
 * { box-sizing: border-box; }
 html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
+#view { position: fixed; inset: 0; overflow: hidden; background: #000; touch-action: manipulation; }
 body.run { cursor: none; }
 #stage { position: absolute; width: 1920px; height: 1080px; left: 50%; top: 50%; transform-origin: 50% 50%; overflow: hidden; background: #000;
   font-family: var(--kr); color: var(--ink); -webkit-font-smoothing: antialiased; }

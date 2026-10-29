@@ -5,7 +5,9 @@ const stage = $("#stage"), slidesEl = $("#slides"), hud = $("#hud"), gflash = $(
 const fmt = (v) => Math.round(v).toLocaleString("en-US");
 const hash = location.hash.slice(1), FINAL = /f$/.test(hash), RM = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-function fit() { const k = Math.min(innerWidth / 1920, innerHeight / 1080); stage.style.transform = `translate(-50%,-50%) scale(${k})`; }
+// size from the fixed #view box, not innerWidth: phones widen the layout viewport around a 1920px page
+const view = $("#view");
+function fit() { const k = Math.min(view.clientWidth / 1920, view.clientHeight / 1080); stage.style.transform = `translate(-50%,-50%) scale(${k})`; }
 addEventListener("resize", fit); fit();
 
 // ================================================================ audio
@@ -949,3 +951,5 @@ addEventListener("click", (e) => {
   e.clientX < innerWidth * 0.15 ? prev() : next();
 });
 if (FINAL) { start.remove(); running = true; show((parseInt(hash) || 1) - 1); }
+// shader textures arrive after the deck is usable
+if (FX) { const sc = document.createElement("script"); sc.src = "lib/imgdata.js"; sc.onload = () => FX.load(); document.body.appendChild(sc); }

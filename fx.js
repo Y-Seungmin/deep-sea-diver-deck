@@ -2,7 +2,7 @@
 // a vertical rush (speed) for chapter dives and expanding ripples on impacts.
 // One canvas is moved between hosts (the .bg of the current slide, or its .dive overlay); the CSS image stays as fallback.
 const FX = (() => {
-  if (/f$/.test(location.hash) || matchMedia("(prefers-reduced-motion: reduce)").matches || !window.IMGDATA) return null;
+  if (/f$/.test(location.hash) || matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
   const cv = document.createElement("canvas"); cv.width = 1280; cv.height = 720; cv.className = "glbg";
   const gl = cv.getContext("webgl", { alpha: false, antialias: false });
   if (!gl) return null;
@@ -36,14 +36,14 @@ void main() {
   const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
   const U = {}; for (const n of ["t", "speed", "depth", "rip", "ripT", "ripC"]) U[n] = gl.getUniformLocation(prog, n);
 
-  // textures from the embedded data URLs
+  // textures from the embedded data URLs; lib/imgdata.js (1.5 MB) is fetched after the deck is live, so slides use the CSS art until then
   const tex = {};
-  for (const [k, src] of Object.entries(window.IMGDATA)) {
+  const load = () => { for (const [k, src] of Object.entries(window.IMGDATA || {})) {
     const im = new Image(); im.onload = () => { const tx = gl.createTexture(); gl.bindTexture(gl.TEXTURE_2D, tx);
       gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGB, gl.RGB, gl.UNSIGNED_BYTE, im);
       for (const [p, v] of [[gl.TEXTURE_MIN_FILTER, gl.LINEAR], [gl.TEXTURE_MAG_FILTER, gl.LINEAR], [gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE], [gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE]]) gl.texParameteri(gl.TEXTURE_2D, p, v);
       tex[k] = tx; }; im.src = src;
-  }
+  } };
 
   const u = { speed: 0, rip: 0, ripT: 0, ripX: 0.5, ripY: 0.5 };
   let key = null, owner = null;
@@ -55,7 +55,7 @@ void main() {
   // where: "bg" puts the canvas inside the slide's .bg (it inherits that layer's GSAP transforms); "dive" inside the chapter overlay
   function attach(s, where = "bg") {
     const bg = s.querySelector(".bg"), k = bg && keyOf(bg);
-    if (!k || !(k in window.IMGDATA)) { release(); key = null; return; }
+    if (!k || !tex[k]) { release(); key = null; return; }
     release(); key = k;
     if (where === "dive" && s.querySelector(".dive")) { const d = s.querySelector(".dive"); d.insertBefore(cv, d.firstChild); cv.classList.add("indive"); return; }
     cv.classList.remove("indive");
@@ -72,5 +72,5 @@ void main() {
   }
   requestAnimationFrame(frame);
   document.body.classList.add("gl");
-  return { attach, release, ripple, u };
+  return { attach, release, ripple, load, u };
 })();
