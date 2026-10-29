@@ -394,3 +394,8 @@ table.hw .ok { color: var(--teal); font: 700 15px var(--num); letter-spacing: .1
 /* WebGL backdrop (fx.js) */
 .glbg { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .glbg.indive { opacity: .5; }
+
+/* touch devices: drop the expensive layers (see LITE in deck.js) */
+body.lite * { filter: none !important; backdrop-filter: none !important; }
+body.lite .caus, body.lite #rays, body.lite #grain { display: none; }
+body.lite .bg { will-change: auto; }

@@ -2,7 +2,8 @@
 // a vertical rush (speed) for chapter dives and expanding ripples on impacts.
 // One canvas is moved between hosts (the .bg of the current slide, or its .dive overlay); the CSS image stays as fallback.
 const FX = (() => {
-  if (/f$/.test(location.hash) || matchMedia("(prefers-reduced-motion: reduce)").matches) return null;
+  // phones get no shader: WebGL textures plus the blur layers push mobile Safari over its memory limit and it reloads the tab
+  if (/f$/.test(location.hash) || matchMedia("(prefers-reduced-motion: reduce)").matches || matchMedia("(pointer: coarse)").matches) return null;
   const cv = document.createElement("canvas"); cv.width = 1280; cv.height = 720; cv.className = "glbg";
   const gl = cv.getContext("webgl", { alpha: false, antialias: false });
   if (!gl) return null;
