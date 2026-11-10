@@ -30,13 +30,13 @@ body.run { cursor: none; }
 /* ---------- type */
 .disp { font-family: var(--disp); font-weight: 700; letter-spacing: .02em; line-height: .88; }
 .num { font-family: var(--num); font-variant-numeric: tabular-nums; }
-.kick { font: 700 21px var(--num); letter-spacing: .28em; color: var(--teal); text-transform: uppercase; }
+.kick { font: 700 24px var(--num); letter-spacing: .28em; color: var(--teal); text-transform: uppercase; }
 .kick .kr { font-family: var(--kr); letter-spacing: .08em; }
 .h1 { font-size: 72px; font-weight: 800; line-height: 1.12; letter-spacing: -.02em; }
 .h2 { font-size: 56px; font-weight: 800; line-height: 1.15; letter-spacing: -.015em; }
-.body { font-size: 26px; line-height: 1.6; color: var(--soft); }
-.small { font-size: 19px; line-height: 1.5; color: var(--dim); }
-.story { font: 34px/1.75 var(--serif); color: var(--ink); text-shadow: 0 2px 18px rgba(0,0,0,.8); }
+.body { font-size: 30px; line-height: 1.6; color: var(--soft); }
+.small { font-size: 22px; line-height: 1.5; color: var(--dim); }
+.story { font: 38px/1.7 var(--serif); color: var(--ink); text-shadow: 0 2px 18px rgba(0,0,0,.8); }
 .story .hl { color: var(--amber); }
 .amber { color: var(--amber); } .teal { color: var(--teal); } .red { color: var(--red); }
 .content { position: absolute; left: 120px; top: 150px; width: 860px; }
@@ -132,7 +132,7 @@ body.run { cursor: none; }
 .panelR { position: absolute; right: 0; top: 0; bottom: 0; width: 760px; background: linear-gradient(90deg, rgba(0,0,0,.35), rgba(0,0,0,.82) 30%); }
 .panelR .in { position: absolute; left: 150px; top: 150px; width: 520px; }
 .list > div { margin-bottom: 26px; }
-.list b { font-size: 27px; } .list span { display: block; font-size: 20px; color: var(--dim); margin-top: 4px; }
+.list b { font-size: 30px; } .list span { display: block; font-size: 23px; color: var(--dim); margin-top: 4px; }
 .vf path { stroke: #fff; stroke-width: 4; fill: none; }
 .ticker { position: absolute; left: 0; right: 0; bottom: 150px; height: 58px; background: rgba(0,0,0,.78); display: flex; align-items: center; overflow: hidden; border-top: 1px solid rgba(255,75,62,.5); }
 .ticker .tag { flex: none; height: 100%; padding: 0 28px; background: var(--red); font: 700 20px var(--num); letter-spacing: .2em; display: flex; align-items: center; position: relative; z-index: 1; }
@@ -152,8 +152,8 @@ body.run { cursor: none; }
 .fcard .im::after { content: ""; position: absolute; inset: 0; background: linear-gradient(0deg, rgba(0,0,0,.55), transparent 50%); }
 .fcard .n { position: absolute; left: 20px; top: 14px; font: 800 52px var(--disp); z-index: 1; }
 .fcard .bl { height: 4px; background: var(--teal); }
-.fcard .t { font-size: 32px; font-weight: 800; margin-top: 22px; }
-.fcard .d { font-size: 20px; color: var(--soft); margin-top: 10px; line-height: 1.5; }
+.fcard .t { font-size: 36px; font-weight: 800; margin-top: 22px; }
+.fcard .d { font-size: 23px; color: var(--soft); margin-top: 10px; line-height: 1.5; }
 .mail { position: absolute; width: 760px; background: #0b1114; border: 1px solid #2c3d45; box-shadow: 0 40px 100px rgba(0,0,0,.7); }
 .mail .top { height: 54px; background: #141e23; display: flex; align-items: center; padding: 0 24px; gap: 10px; font-size: 20px; font-weight: 700; }
 .mail .top .dot { width: 12px; height: 12px; border-radius: 50%; background: var(--red); }
@@ -163,7 +163,7 @@ body.run { cursor: none; }
 .mail .btn { padding: 12px 26px; border: 1.5px solid #3a4d55; font-size: 19px; font-weight: 700; color: var(--soft); }
 .mail .btn.acc { border-color: var(--teal); color: var(--teal); }
 .mail kbd { font: 700 12px var(--num); letter-spacing: .14em; padding: 2px 6px; border: 1px solid currentColor; margin-left: 8px; vertical-align: 2px; }
-.flow { display: flex; gap: 14px; align-items: center; font-size: 22px; color: var(--soft); margin-top: 34px; flex-wrap: wrap; }
+.flow { display: flex; gap: 14px; align-items: center; font-size: 26px; color: var(--soft); margin-top: 34px; flex-wrap: wrap; }
 .flow b { color: var(--teal); font-family: var(--num); }
 .steps { position: absolute; right: 120px; top: 56px; display: flex; gap: 10px; }
 .steps > div { width: 150px; font-size: 15px; color: var(--faint); }
@@ -222,14 +222,14 @@ body.run { cursor: none; }
 .enc b.n { font: 700 26px var(--num); color: var(--teal); } .enc span { font-size: 21px; color: var(--dim); }
 .xp > div { border-left: 5px solid var(--teal); padding: 6px 0 6px 30px; margin-bottom: 40px; }
 .xp > div.a { border-color: var(--amber); }
-.xp b { font-size: 32px; } .xp span { display: block; font-size: 22px; color: var(--soft); margin-top: 8px; line-height: 1.5; }
+.xp b { font-size: 34px; } .xp span { display: block; font-size: 25px; color: var(--soft); margin-top: 8px; line-height: 1.5; }
 
 /* system check console */
 .con .term { font: 21px var(--mono); color: var(--teal); padding: 20px 30px 12px; min-height: 60px; }
 .con .term.res { color: var(--amber); padding-top: 16px; }
 .con .tw { position: relative; margin: 0 30px; }
 .con .scanl { position: absolute; left: 0; right: 0; top: 58px; height: 58px; background: linear-gradient(90deg, transparent, rgba(95,227,211,.16) 30%, rgba(95,227,211,.16) 70%, transparent); pointer-events: none; opacity: 0; }
-table.hw { border-collapse: collapse; width: 100%; font-size: 22px; }
+table.hw { border-collapse: collapse; width: 100%; font-size: 24px; }
 table.hw th, table.hw td { padding: 0 26px; height: 58px; text-align: left; border-bottom: 1px solid var(--line); }
 table.hw th { font: 700 20px var(--num); letter-spacing: .06em; color: var(--teal); border-bottom: 2px solid var(--teal); }
 table.hw th.us { color: var(--amber); border-bottom-color: var(--amber); }
@@ -334,7 +334,7 @@ table.hw .ok { color: var(--teal); font: 700 15px var(--num); letter-spacing: .1
 .lnode svg { width: 58px; height: 58px; stroke: var(--teal); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
 .ltext { position: absolute; width: 250px; text-align: center; }
 .ltext b { font-size: 28px; } .ltext b .num { color: var(--teal); font-size: 22px; margin-right: 4px; }
-.ltext span { display: block; font-size: 18px; color: var(--soft); margin-top: 6px; line-height: 1.45; white-space: nowrap; }
+.ltext span { display: block; font-size: 21px; color: var(--soft); margin-top: 6px; line-height: 1.45; white-space: nowrap; }
 .deeper { font: 700 22px var(--num); color: var(--amber); letter-spacing: .14em; }
 .ldot { width: 18px; height: 18px; border-radius: 50%; background: #fff; box-shadow: 0 0 18px 6px rgba(95,227,211,.8); }
 
@@ -399,3 +399,37 @@ table.hw .ok { color: var(--teal); font: 700 15px var(--num); letter-spacing: .1
 body.lite * { filter: none !important; backdrop-filter: none !important; }
 body.lite .caus, body.lite #rays, body.lite #grain { display: none; }
 body.lite .bg { will-change: auto; }
+
+/* v2: co-op roles page */
+.role { position: absolute; width: 380px; padding: 30px 28px; background: rgba(4,12,16,.85); border: 1px solid #2a3c44; border-top: 4px solid var(--teal); }
+.role svg { width: 64px; height: 64px; stroke: var(--teal); stroke-width: 2; fill: none; stroke-linecap: round; stroke-linejoin: round; }
+.role .rn { font-size: 38px; font-weight: 900; margin-top: 14px; } .role .rn small { display: block; font: 700 16px var(--num); letter-spacing: .26em; color: var(--teal); margin-bottom: 4px; }
+.role .rd { font-size: 25px; color: var(--soft); margin-top: 12px; line-height: 1.45; }
+.hunt { position: absolute; left: 120px; right: 180px; top: 700px; display: flex; align-items: center; gap: 0; }
+.hunt > div { flex: 1; text-align: center; font-size: 26px; font-weight: 800; color: var(--faint); padding: 16px 0; border-bottom: 4px solid #22323a; }
+.hunt > i { font-style: normal; color: var(--faint); font-size: 26px; padding: 0 6px; }
+.vs { position: absolute; left: 120px; right: 180px; top: 820px; display: flex; gap: 30px; }
+.vs > div { flex: 1; font-size: 24px; color: var(--soft); padding: 16px 22px; border-left: 4px solid var(--amber); background: rgba(255,181,71,.06); }
+.vs b { color: var(--amber); }
+.story .ln.rd { color: var(--red); }
+.zone .th { font: 700 22px var(--num); color: var(--red); letter-spacing: .2em; margin-top: 10px; }
+.harp { width: 100%; height: 100%; }
+
+/* world map */
+.site { position: absolute; display: flex; align-items: center; gap: 12px; transform: translate(-37px, -37px); }
+.site i { width: 74px; height: 74px; border-radius: 50%; background: center / cover; border: 3px solid var(--teal); box-shadow: 0 0 22px rgba(95,227,211,.35); flex: none; display: flex; align-items: center; justify-content: center; }
+.site.boss i { border-color: var(--red); box-shadow: 0 0 26px rgba(255,75,62,.5); } .site.st i { border-color: var(--amber); }
+.site i.ore { background: #071216; } .site i.ore svg { width: 40px; height: 40px; stroke: var(--teal); stroke-width: 2; fill: none; }
+.site span { font-size: 22px; font-weight: 800; text-shadow: 0 2px 10px #000; white-space: nowrap; }
+.legend > div { font-size: 22px; color: var(--soft); margin-bottom: 14px; display: flex; align-items: center; gap: 12px; }
+.legend .lg { width: 20px; height: 20px; border-radius: 50%; border: 3px solid var(--teal); display: inline-block; }
+.legend .lg.st { border-color: var(--amber); } .legend .lg.boss { border-color: var(--red); }
+/* co-op storyboard */
+.panel4 { position: absolute; width: 380px; background: linear-gradient(#071419, #030a0d); border: 1px solid #2a3c44; }
+.panel4 .pn { padding: 14px 18px; font-size: 28px; font-weight: 900; border-bottom: 1px solid #2a3c44; } .panel4 .pn .num { color: var(--teal); margin-right: 6px; }
+.panel4 svg { display: block; }
+.panel4 .pd { padding: 14px 18px 18px; font-size: 21px; color: var(--soft); line-height: 1.45; min-height: 96px; }
+.extra { position: absolute; left: 120px; right: 180px; top: 840px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; }
+.extra b { font: 700 20px var(--num); letter-spacing: .2em; color: var(--amber); margin-right: 10px; }
+.extra i { font-style: normal; font-size: 23px; padding: 10px 20px; border: 1.5px solid #3a4d55; background: rgba(0,0,0,.5); }
+.pwrap { position: relative; } .pimg { position: absolute; inset: 0; background: center / cover no-repeat; }

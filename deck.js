@@ -263,26 +263,30 @@ const ICON = {
   fuel: '<path d="M12 12h18l5 5v26H12z"/><path d="M17 7h9v5M18 27h12M24 21v12"/>',
   down: '<path d="M24 6v30M12 26l12 12 12-12"/>',
   cam: '<path d="M6 16h8l3-5h14l3 5h8v22H6z"/><circle cx="24" cy="27" r="7"/>',
+  eye: '<path d="M4 24s8-12 20-12 20 12 20 12-8 12-20 12S4 24 4 24z"/><circle cx="24" cy="24" r="6"/>',
+  helm: '<circle cx="24" cy="24" r="12"/><circle cx="24" cy="24" r="3"/><path d="M24 4v8M24 36v8M4 24h8M36 24h8M10 10l6 6M32 32l6 6M10 38l6-6M32 16l6-6"/>',
+  kit: '<path d="M8 16h32v24H8z"/><path d="M18 16v-6h12v6M24 22v12M18 28h12"/>',
   harpoon: '<path d="M8 40L38 10"/><path d="M38 10l-10 1.5M38 10l-1.5 10"/><path d="M13 31l4 4M17 27l4 4"/>',
 };
 const ico = (k) => `<svg viewBox="0 0 48 48">${ICON[k]}</svg>`;
+// the glowing harpoon drawn as an object (shaft, barbed head, light at the tip) for the workbench recipe
+const HARP = `<svg class="harp" viewBox="0 0 200 96"><defs><linearGradient id="hs" x1="0" x2="1"><stop offset="0" stop-color="#3a4a52"/><stop offset="1" stop-color="#9fb7c1"/></linearGradient><filter id="hg"><feGaussianBlur stdDeviation="4"/></filter></defs><path d="M14 70 L150 34" stroke="url(#hs)" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M24 66l-10 12M34 63l-8 12" stroke="#5a6a72" stroke-width="4"/><path d="M146 28 L186 22 L156 46 Z" fill="#5FE3D3" filter="url(#hg)" opacity=".9"/><path d="M148 30 L184 23 L156 44 Z M156 44 L150 52 M150 33 L142 26" fill="#c9fff7" stroke="#5FE3D3" stroke-width="2"/><circle cx="178" cy="25" r="10" fill="#5FE3D3" filter="url(#hg)" opacity=".7"/></svg>`;
 
 // 03b ── 01 core loop: dive → shoot & gather → government lab → craft & upgrade → deeper
-const LOOPN = [["down", "잠수", "잠수정으로 다음 층에 내려간다"], ["cam", "촬영 · 채집", "크리쳐 · 문명 촬영, 자원 채집"], ["vial", "정부 연구", "사진 · 샘플로 약점 · 레시피 해금"], ["harpoon", "제작 · 강화", "무기 · 방어구 제작, 잠수정 수리"]];
-const LCX = 1180, LCY = 590, LR = 230, lpos = (k) => [LCX + LR * Math.sin((k * Math.PI) / 2), LCY - LR * Math.cos((k * Math.PI) / 2)];
+const LOOPN = [["fuel", "생존", "산소 · 연료를 지키며 하강"], ["harpoon", "심해 전투 · 채집", "크리쳐를 사냥해 재료를 얻는다"], ["scrap", "제조 · 강화", "부품 생산, 무기 · 잠수정 강화"], ["eye", "거대 크리쳐 사냥", "4명이 함께 층의 주인을 쓰러뜨린다"]];
+const LCX = 1240, LCY = 590, LR = 230, lpos = (k) => [LCX + LR * Math.sin((k * Math.PI) / 2), LCY - LR * Math.cos((k * Math.PI) / 2)];
 const arcD = (k) => { const a0 = (k * 90 + 16) * Math.PI / 180, a1 = (k * 90 + 74) * Math.PI / 180, P = (a) => `${LCX + LR * Math.sin(a)} ${LCY - LR * Math.cos(a)}`; return `M${P(a0)} A${LR} ${LR} 0 0 1 ${P(a1)}`; };
 S.push({ depth: 200, html: () => `
   <div class="bg" style="background-image:url(img/sub.jpg)"></div><div class="veil" style="opacity:.86"></div><div class="wmk">01</div>
-  <div class="content" style="width:640px">${kick("01 — 2", "게임 개요")}<div class="h1" style="margin:12px 0 36px">한 번의 잠수가<br>다음 잠수를<br>더 깊게</div>
-    <div class="body">찍고, 모으고, 연구하고, 만든다. 강해진 만큼 더 깊은 층에 내려갈 수 있고, 바닥에 닿으면 엔딩이다.</div>
-    <div class="body risk" style="margin-top:34px;font-size:22px"><b class="red">위험</b> &nbsp;수압이 선체를 깎고, 연료가 줄고, 크리쳐가 막는다</div></div>
+  <div class="content" style="width:640px">${kick("01 — 2", "게임 개요")}<div class="h1" style="margin:12px 0 30px">사냥한 만큼<br>더 깊이</div>
+    <div class="body" style="width:640px">층의 주인을 쓰러뜨려야<br>다음 층이 열린다.</div></div>
   <svg class="abs loopsvg" style="left:0;top:0;overflow:visible" width="1920" height="1080"><defs><marker id="ah" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5FE3D3"/></marker></defs>
     <circle cx="${LCX}" cy="${LCY}" r="${LR}" fill="none" stroke="rgba(95,227,211,.12)" stroke-width="2"/>
     ${[0, 1, 2, 3].map((k) => `<path class="arc" d="${arcD(k)}" fill="none" stroke="#5FE3D3" stroke-width="3" marker-end="url(#ah)"/>`).join("")}</svg>
   <div class="abs lmid" style="left:${LCX - 150}px;top:${LCY - 70}px;width:300px;text-align:center"><div class="kick" style="letter-spacing:.3em">GOAL</div><div class="disp" style="font-size:84px;margin-top:8px">10,900 m</div><div class="small" style="margin-top:6px">바닥에 닿으면 엔딩</div></div>
   <div class="abs ldot"></div>
   ${LOOPN.map(([ic, t, d], k) => { const [x, y] = lpos(k); return `<div class="lnode" style="left:${x - 62}px;top:${y - 62}px">${ico(ic)}</div>
-    <div class="ltext" style="${k === 1 ? `left:${x + 78}px;top:${y - 42}px;text-align:left` : k === 3 ? `left:${x - 328}px;top:${y - 42}px;text-align:right;direction:rtl` : `left:${x - 140}px;top:${k === 0 ? y - 150 : y + 76}px`}"><b><span class="num">0${k + 1}</span> ${t}</b><span>${d}</span></div>`; }).join("")}
+    <div class="ltext" style="${k === 1 ? `left:${x + 78}px;top:${y - 42}px;text-align:left` : k === 3 ? `left:${x - 328}px;top:${y - 42}px;text-align:right;direction:rtl` : `left:${x - 140}px;top:${k === 0 ? y - 172 : y + 76}px`}"><b><span class="num">0${k + 1}</span> ${t}</b><span>${d}</span></div>`; }).join("")}
   <div class="abs deeper num" style="left:${LCX - LR - 150}px;top:${LCY - LR + 20}px">더 깊이 ↺</div>
 `,
   build(s, tl) {
@@ -308,8 +312,9 @@ const gaugeRow = (i, en, kr, d, c) => `<div class="g g${i}" style="margin-top:${
 S.push({ depth: 1000, noRes: true, html: () => `
   <div class="bg" style="background-image:url(img/crew.jpg)"></div><div class="veil" style="opacity:.25"></div><div class="shadeL"></div><div class="wmk">02</div>
   <div class="content">${kick("02 — 1", "핵심 특징")}<div class="h1" style="margin:12px 0 26px">잠수정 관리</div>
-    <div class="body" style="margin-bottom:56px">잠수정은 엘리베이터처럼 <b style="color:var(--ink)">아래로만</b> 내려간다. 깊어질수록 수압이 선체를 부수고, 연료가 바닥나면 그 자리가 무덤이 된다.</div>
-    ${gaugeRow(0, "HULL", "선체 내구도", "수압이 깎는다 → 바다에서 주운 폐품으로 수리", "var(--teal)")}${gaugeRow(1, "FUEL", "연료", "이동할 때마다 줄어든다 → 0이 되면 갇혀서 사망", "var(--amber)")}</div>
+    <div class="body" style="margin-bottom:46px"><b style="color:var(--ink)">아래로만</b> 가는 잠수정. 선체나 연료가 바닥나면 끝.</div>
+    ${gaugeRow(0, "HULL", "선체", "수압이 깎는다", "var(--teal)")}${gaugeRow(1, "FUEL", "연료", "이동할수록 준다", "var(--amber)")}
+    <div class="flow mg" style="margin-top:44px"><b>폐품 · 물자</b> <span class="teal">→</span> <b>부품 생산</b> <span class="teal">→</span> <b>무기 획득</b> <span class="teal">→</span> <b class="amber">잠수정 강화</b></div></div>
   <div class="abs w1" style="left:1080px;top:380px"><div class="warn">${rgb("PRESSURE")}</div></div>
   <div class="abs w2" style="left:1080px;top:560px"><div class="warn">${rgb("LOW FUEL")}</div></div>
   <div class="abs redwash" style="inset:0;background:radial-gradient(ellipse at 50% 50%,transparent 30%,rgba(255,40,30,.45));opacity:0"></div>
@@ -318,7 +323,7 @@ S.push({ depth: 1000, noRes: true, html: () => `
     const T = dive(tl, s, 200, 1000), g0 = $(".g0", s), g1 = $(".g1", s), bg = $(".bg", s);
     tl.set([$(".w1", s), $(".w2", s)], { opacity: 0 }, 0);
     tl.from(bg, { scale: 1.2, duration: 3, ease: "power2.out" }, T - 0.8);
-    rise(tl, [$(".kick", s), $(".h1", s), $(".body", s)], T); rise(tl, [g0, g1], T + 0.5, { s: 0.15 });
+    rise(tl, [$(".kick", s), $(".h1", s), $(".body", s)], T); rise(tl, [g0, g1], T + 0.5, { s: 0.15 }); tl.from($$(".mg > *", s), { opacity: 0, x: -14, stagger: 0.12, duration: 0.35 }, T + 2.1);
     const fill = (g, to, at, dur) => { tl.to($(".gaugebar i", g), { width: to + "%", duration: dur, ease: "power2.inOut" }, at); count(tl, $(".pct", g), parseFloat($(".pct", g).dataset.v || 0), to, at, dur, (v) => Math.round(v) + "%"); $(".pct", g).dataset.v = to; };
     fill(g0, 100, T + 0.8, 1.2); fill(g1, 100, T + 0.95, 1.2); call(tl, () => sfx("tick", 0.5), T + 2);
     tl.addPause();
@@ -341,16 +346,16 @@ S.push({ depth: 1000, noRes: true, html: () => `
   } });
 
 // 05 ── 02 core ②: depth zones (click → the camera dives through five layers)
-const Z = [["0 – 200 m", "표층", "폐품과 연료가 많은 입문 구역", "EPIPELAGIC", ""], ["200 – 1,000 m", "중층", "발광 생물 무리, 첫 문명의 흔적", "MESOPELAGIC", "descend"], ["1,000 – 4,000 m", "심층", "인간형 크리쳐와 유물 무기", "BATHYPELAGIC", "humanoid"],
-  ["4,000 – 6,000 m", "심해층", "대형 크리쳐(보스), 희귀 광석", "ABYSSOPELAGIC", "boss"], ["6,000 – 10,900 m", "초심해", "크리쳐 문명의 중심, 그리고 엔딩", "HADALPELAGIC", "ruins"]];
+const Z = [["0 – 200 m", "표층", "폐품 · 연료가 많은 입문 구역", "EPIPELAGIC", ""], ["200 – 1,000 m", "중층", "발광 생물 무리", "MESOPELAGIC", "descend"], ["1,000 – 4,000 m", "심층", "사람을 닮은 크리쳐", "BATHYPELAGIC", "humanoid"],
+  ["4,000 – 6,000 m", "심해층", "잠수정보다 큰 크리쳐", "ABYSSOPELAGIC", "boss"], ["6,000 – 10,900 m", "초심해", "크리쳐 문명, 그리고 그 너머", "HADALPELAGIC", "ruins"]];
 S.push({ depth: 1000, html: () => `
   <div class="abs col" style="left:0;top:0;width:1920px;height:${1080 * 5}px;background:linear-gradient(180deg,#0f6070 0,#0a3f4c 8%,#06222c 20%,#03141b 40%,#010a0e 62%,#000 85%)">
     <div class="abs" style="left:0;top:0;width:1920px;height:1300px;background:repeating-linear-gradient(100deg,transparent 0 90px,rgba(180,255,250,.07) 90px 150px,transparent 150px 260px);-webkit-mask:linear-gradient(180deg,#000,transparent);mask:linear-gradient(180deg,#000,transparent)"></div>
     ${Z.map((z, i) => `${z[4] ? `<div class="abs" style="left:0;top:${i * 1080}px;width:1300px;height:1080px;background:url(img/${z[4]}.jpg) center/cover;opacity:.55;-webkit-mask:radial-gradient(ellipse 60% 60% at 60% 50%,#000 20%,transparent 75%);mask:radial-gradient(ellipse 60% 60% at 60% 50%,#000 20%,transparent 75%)"></div>` : ""}
-      <div class="zone" style="top:${i * 1080 + 560}px"><div class="r">${z[0]}</div><div class="n">${z[1]}</div><div class="d">${z[2]}</div></div>`).join("")}
+      <div class="zone" style="top:${i * 1080 + 540}px"><div class="r">${z[0]}</div><div class="n">${z[1]}</div><div class="d">${z[2]}</div><div class="th">위협 ${"■".repeat(i + 1)}${"□".repeat(4 - i)}</div></div>`).join("")}
   </div>
-  <div class="panelR"><div class="in">${kick("02 — 2", "핵심 특징")}<div class="h2" style="margin:12px 0 26px">층마다<br>다른 바다</div>
-    <div class="body" style="font-size:23px">층마다 괴물, 폐품, 자원, 문명, 연료의 양이 다르다. 위층 자원으로 잠수정을 강화해야 더 깊이 들어갈 수 있다.</div>
+  <div class="panelR"><div class="in">${kick("02 — 2", "핵심 특징")}<div class="h2" style="margin:12px 0 26px">깊을수록<br>커지는 공포</div>
+    <div class="body" style="font-size:28px">내려갈수록 더 크고,<br>더 낯선 것이 산다.</div>
     <div class="disp big" style="font-size:150px;margin-top:70px"><span class="v">0</span><span style="font-size:60px"> m</span></div>
     <div class="num zl" style="font-size:20px;letter-spacing:.3em;color:var(--teal);margin-top:14px">EPIPELAGIC</div>
     <div class="num hint" style="font-size:17px;color:var(--faint);margin-top:60px;letter-spacing:.1em">CLICK → DIVE</div></div></div>`,
@@ -374,6 +379,35 @@ S.push({ depth: 1000, html: () => `
     flash(tl, t + D, 0.25);
   } });
 
+// 06b ── world map: a cross-section of the trench, the route drawn in, each site lit like a sonar contact
+const MY = (d) => [[0, 150], [200, 262], [1000, 392], [4000, 560], [6000, 720], [10900, 930]].reduce((acc, [dd, y], i, a) => (d >= dd && i < a.length - 1 && d <= a[i + 1][0] ? y + (a[i + 1][1] - y) * (d - dd) / (a[i + 1][0] - dd) : acc), 930);
+const SITES = [[1060, 228, "정비 정거장", "sub", "st"], [1395, 330, "가라앉은 군함", "wreck", ""], [1040, 470, "고대 유적", "ruins", ""], [1405, 520, "인간형 크리쳐 서식지", "humanoid", "boss"],
+  [1070, 650, "희귀 광맥", "", "res"], [1390, 700, "층의 주인 둥지", "boss", "boss"], [1220, 872, "크리쳐 문명의 중심", "specimen", ""]];
+const ROUTE = [[1220, 120], [1080, 228], [1380, 330], [1060, 470], [1390, 520], [1080, 650], [1370, 700], [1220, 872]];
+S.push({ depth: 1000, html: () => `
+  <div class="abs" style="inset:0;background:linear-gradient(180deg,#0b4250 0,#062430 14%,#03141b 34%,#010a0e 60%,#000 86%)"></div>
+  <svg class="abs" style="left:0;top:0" width="1920" height="1080">
+    <path d="M700 120 L960 120 L930 300 L980 420 L900 560 L960 700 L1060 860 L1140 930 L1300 930 L1380 860 L1480 700 L1540 560 L1460 420 L1510 300 L1480 120 L1760 120 L1760 1000 L700 1000 Z" fill="#0c1b21" stroke="rgba(95,227,211,.35)" stroke-width="2"/>
+    ${[200, 1000, 4000, 6000].map((d) => `<line x1="700" x2="1760" y1="${MY(d)}" y2="${MY(d)}" stroke="rgba(160,200,210,.12)" stroke-dasharray="6 10"/>`).join("")}
+    <polyline class="route" points="${ROUTE.map((q) => q.join(",")).join(" ")}" fill="none" stroke="#FFB547" stroke-width="3" stroke-dasharray="10 8"/>
+    <ellipse class="shadow" cx="1220" cy="975" rx="230" ry="34" fill="#000" stroke="rgba(255,75,62,.5)" stroke-width="2"/>
+  </svg>
+  ${[[0, "0 m"], [200, "200"], [1000, "1,000"], [4000, "4,000"], [6000, "6,000"], [10900, "10,900"]].map(([d, t]) => `<div class="abs num" style="left:640px;top:${MY(d) - 12}px;width:50px;text-align:right;font-size:16px;color:var(--dim)">${t}</div>`).join("")}
+  ${SITES.map(([x, y, n, im, k]) => `<div class="site ${k}" style="left:${x}px;top:${y}px">${im ? `<i style="background-image:url(img/${im}.jpg)"></i>` : `<i class="ore">${ico("ore")}</i>`}<span>${n}</span></div>`).join("")}
+  <div class="abs num qq" style="left:1192px;top:958px;font-size:30px;font-weight:800;color:var(--red)">???</div>
+  <div class="content" style="width:480px">${kick("02 — 3", "월드맵")}<div class="h1" style="margin:12px 0 30px">해구<br>단면도</div>
+    <div class="legend"><div><b class="amber">- - -</b> 잠수정 경로</div><div><i class="lg st"></i> 정비 정거장</div><div><i class="lg boss"></i> 보스 · 위험 지역</div><div><i class="lg res"></i> 자원</div><div><b class="red">???</b> 바닥 아래</div></div></div>`,
+  build(s, tl) {
+    rise(tl, [$(".kick", s), $(".h1", s), ...$$(".legend > div", s)], 0.2, { s: 0.08 });
+    const route = $(".route", s), L = route.getTotalLength();
+    tl.fromTo(route, { strokeDashoffset: L, strokeDasharray: `${L} ${L}` }, { strokeDashoffset: 0, duration: 4.2, ease: "power1.inOut" }, 0.6)
+      .set(route, { strokeDasharray: "10 8" }, 4.85);
+    $$(".site", s).forEach((st, i) => { const at = 0.9 + i * 0.55;
+      tl.from(st, { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2.5)" }, at); call(tl, () => (st.classList.contains("boss") ? (sfx("ping", 0.6), boom(0.3)) : sfx("tick", 0.6)), at); });
+    tl.from($(".shadow", s), { opacity: 0, scaleX: 0.4, transformOrigin: "50% 50%", duration: 1.2, ease: "power2.out" }, 5.0).from($(".qq", s), { opacity: 0, duration: 0.6 }, 5.6);
+    call(tl, () => { sonar(0.12); boom(0.7); }, 5.0); shake(tl, $(".shadow", s), 5.2, 10, 0.6);
+  } });
+
 // 06 ── 02 core ③: photographs (flashlight hunt → lock → shutter → the shot flies into the codex)
 S.push({ depth: 1840, pre: [89, 86, 0], html: () => `
   <div class="bg" style="background-image:url(img/humanoid.jpg)"></div>
@@ -384,9 +418,9 @@ S.push({ depth: 1840, pre: [89, 86, 0], html: () => `
   <div class="abs focus" style="left:530px;top:240px;width:260px;height:260px;border:3px solid var(--teal);opacity:0"></div>
   <div class="abs num lock" style="left:810px;top:250px;font-size:18px;font-weight:700;letter-spacing:.14em;color:var(--teal);opacity:0">TARGET LOCKED</div>
   <div class="abs shot" style="left:530px;top:240px;width:260px;height:260px;background:url(img/humanoid.jpg) -530px -240px / 1920px 1080px;border:6px solid #F2EFE8;box-shadow:0 20px 50px rgba(0,0,0,.6);opacity:0"></div>
-  <div class="panelR"><div class="in">${kick("02 — 3", "핵심 특징")}<div class="h2" style="margin:12px 0 26px">찍어야<br>잡을 수 있다</div>
+  <div class="panelR"><div class="in">${kick("02 — 3", "핵심 특징")}<div class="h2" style="margin:12px 0 26px">찍고,<br>약점을 노려라</div>
     <div class="log" style="font:24px/1.7 var(--serif);color:var(--ink);min-height:170px">조명 끝에서 무언가 우리를 보고 있었다. 사람의 형체였다. 셔터를 누르자 녀석은 어둠 속으로 사라졌다.</div>
-    <div class="list" style="margin-top:34px">${[["약점 발견", "사진을 분석하면 크리쳐의 약점이 드러난다"], ["제품화", "연구로 무기 · 방어구 레시피가 해금된다"], ["도감 작성", "미발견 생명체를 기록해 도감을 채운다"]].map(([h, d], i) => `<div><b style="color:${i ? "var(--ink)" : "var(--amber)"}"><span class="num">0${i + 1}</span> &nbsp;${h}</b><span>${d}</span></div>`).join("")}</div></div></div>
+    <div class="list" style="margin-top:34px">${[["촬영", "찍으면 약점이 표시된다"], ["4인 사냥", "약점을 노려 함께 공격"], ["샘플 회수", "새 무기 · 강화 재료"]].map(([h, d], i) => `<div><b style="color:${i ? "var(--ink)" : "var(--amber)"}"><span class="num">0${i + 1}</span> &nbsp;${h}</b><span>${d}</span></div>`).join("")}</div></div></div>
   <div class="bar t"></div><div class="bar b"></div>
   ${toast("CODEX +1", "인간형 크리쳐 #01 — 도감에 기록됨", "left:150px;right:auto;top:auto;bottom:130px")}`,
   build(s, tl) {
@@ -463,7 +497,7 @@ S.push({ depth: 1840, hideHud: true, html: () => `
 function storyHTML(img, kicker, lines, extra, chap) {
   return `<div class="bg" style="background-image:url(img/${img}.jpg)"></div><div class="veil" style="opacity:.2"></div><div class="shadeL"></div><div class="shadeB" style="opacity:.6"></div>
   <div class="content" style="top:200px;width:1000px">${kick(kicker[0], kicker[1])}
-    <div class="story" style="margin-top:40px">${lines.map(([t, hl, gap]) => `<div class="ln${hl ? " hl" : ""}" style="${gap ? "margin-top:30px" : ""}">${t}</div>`).join("")}</div></div>
+    <div class="story" style="margin-top:40px">${lines.map(([t, hl, gap]) => `<div class="ln${hl === 2 ? " rd" : hl ? " hl" : ""}" style="${gap ? "margin-top:30px" : ""}">${t}</div>`).join("")}</div></div>
   ${extra}${chap ? diveHTML("03", "세계관", 2000, "생존자들은 모두 같은 말을 했다.") : ""}`;
 }
 function storyBuild(s, tl, T, onDone) {
@@ -474,7 +508,7 @@ function storyBuild(s, tl, T, onDone) {
   drift($(".bg", s), T + 4, 1.06, 30);
   onDone && onDone(t);
 }
-S.push({ depth: 2000, html: () => storyHTML("storm", ["03 — 1", "세계관 · 사건"], [["전 세계 바다에서 배들이 사라지기 시작했다."], ["생존자들은 같은 말을 했다."], ["“바다 밑에서 무언가 올라왔다.”"], ["사람이 죽어 나가자, 각국 정부는 조사를 시작했다.", 1, 1]],
+S.push({ depth: 2000, html: () => storyHTML("storm", ["03 — 1", "세계관 · 사건"], [["전 세계 바다에서 배들이 사라졌다."], ["“바다 밑에서 무언가 올라왔다.”"], ["각국 정부가 조사를 시작했다.", 1, 1]],
   `<div class="ticker"><div class="tag">BREAKING</div><div class="run">태평양 화물선 3척 연락 두절 &nbsp;&nbsp;·&nbsp;&nbsp; 대서양 어선 승무원 전원 실종 &nbsp;&nbsp;·&nbsp;&nbsp; “정체불명의 생명체” 목격담 잇따라 &nbsp;&nbsp;·&nbsp;&nbsp; 각국 정부, 합동 조사 착수 &nbsp;&nbsp;·&nbsp;&nbsp; 태평양 화물선 3척 연락 두절 &nbsp;&nbsp;·&nbsp;&nbsp; 대서양 어선 승무원 전원 실종</div></div>`, true),
   build(s, tl) {
     const T = dive(tl, s, 1840, 2000), bg = $(".bg", s);
@@ -488,7 +522,7 @@ S.push({ depth: 2000, html: () => storyHTML("storm", ["03 — 1", "세계관 · 
     const strike = (at) => { tl.to(bg, { keyframes: [{ filter: "brightness(2.2)", duration: 0.05 }, { filter: "brightness(.9)", duration: 0.08 }, { filter: "brightness(1.8)", duration: 0.05 }, { filter: "brightness(1)", duration: 0.5 }] }, at); flash(tl, at, 0.18, 0.4); call(tl, () => thunder(0.6), at + 0.1); };
     strike(T + 0.3); strike(T + 6.5);
   } });
-S.push({ depth: 2300, html: () => storyHTML("descend", ["03 — 2", "세계관 · 투입"], [["조사 끝에 정부는 지구에서 가장 깊은 바다에서"], ["크리쳐와, 그들이 세운 문명을 발견한다."], ["각국은 해군 심해 탐사대를 투입한다.", 1, 1]],
+S.push({ depth: 2300, html: () => storyHTML("descend", ["03 — 2", "세계관 · 투입"], [["가장 깊은 바다에서 크리쳐의 문명이 발견됐다."], ["해군 심해 탐사대가 투입된다.", 1, 1]],
   `<div class="stamp" style="left:1220px;top:300px"><small>ORDER 03-112</small>DEPLOY</div>`),
   build(s, tl) {
     tl.set($(".stamp", s), { opacity: 0 }, 0);
@@ -497,7 +531,7 @@ S.push({ depth: 2300, html: () => storyHTML("descend", ["03 — 2", "세계관 �
       call(tl, () => { sfx("tick", 1); boom(0.6); }, t + 0.18); shake(tl, [$(".stamp", s), $(".bg", s)], t + 0.18, 14, 0.3);
     });
   } });
-S.push({ depth: 2600, html: () => storyHTML("specimen", ["03 — 3", "세계관 · 연구"], [["탐사대가 보내는 희귀 자원과 크리쳐의 시체 샘플."], ["정부는 그것으로 크리쳐를 연구한다."], ["약점을 찾고, 무기를 만들고, 다시 바다로 보낸다.", 1, 1]],
+S.push({ depth: 2600, html: () => storyHTML("specimen", ["03 — 3", "세계관 · 연구"], [["사냥한 크리쳐의 샘플이 새 무기가 된다."], ["더 강해져서, 더 깊이 내려간다.", 1, 1]],
   `<div class="doc" style="left:1240px;top:230px"><div class="cl">CLASSIFIED</div><div style="font-weight:700;font-size:25px">연구 보고서 #A-07</div><br>표본: 심층 발광 생물<br>채집 수심: 2,610 m<br>특이사항: 빛에 강한 반응<br>담당: <span class="redact">해양연구청 김ㅇㅇ</span><br><br><b>결론: 무기 소재로 전환 가능</b></div>`),
   build(s, tl) {
     tl.set($(".doc", s), { opacity: 0 }, 0);
@@ -507,24 +541,24 @@ S.push({ depth: 2600, html: () => storyHTML("specimen", ["03 — 3", "세계관 
     });
   } });
 const MISSION = ["문명 촬영", "희귀 자원 수집", "크리쳐 사냥 · 샘플", "바닥 도달"];
-S.push({ depth: 3000, html: () => storyHTML("crew2", ["03 — 4", "세계관 · 임무"], [["유저는 해군 심해 탐사대원이다."], ["층마다 문명과 자원을 촬영하고,"], ["크리쳐를 사냥해 샘플을 얻는다."], ["그리고 더 깊이, 바닥까지 내려간다.", 1, 1]],
-  `<div class="brief" style="left:1240px;top:260px"><div class="h">MISSION</div>${MISSION.map((m, i) => `<div class="m"><i></i>${i === 3 ? `<b>${m}</b>` : m}</div>`).join("")}</div>`),
+S.push({ depth: 3000, html: () => storyHTML("crew2", ["03 — 4", "세계관 · 임무"], [["유저는 해군 심해 탐사대원이다."], ["크리쳐를 사냥하며 바닥까지 내려간다."], ["출발 직전, 소나에 무언가가 잡혔다.", 1, 1], ["잠수정보다 수백 배 큰 그림자였다.", 2]],
+  `<div class="brief" style="left:1240px;top:260px"><div class="h" style="color:var(--red)">SONAR CONTACT</div><div style="position:relative;height:260px;border-radius:50%;width:260px;margin:10px auto;border:1px solid rgba(255,75,62,.35);background:radial-gradient(circle,rgba(255,75,62,.08),transparent 70%)"><i class="gb" style="position:absolute;left:30%;top:22%;width:120px;height:46px;border-radius:50%;background:var(--red);filter:blur(10px);opacity:.85"></i></div><div class="m" style="justify-content:center;color:var(--red)"><b>미확인 · 길이 300 m 이상</b></div></div>`),
   build(s, tl) {
     tl.set($(".brief", s), { opacity: 0 }, 0);
     storyBuild(s, tl, 0.2, (t) => {
       tl.set($(".brief", s), { opacity: 1 }, t).from($(".brief", s), { y: 40, opacity: 0, duration: 0.6, ease: "power3.out" }, t);
       tl.from($$(".brief .m", s), { opacity: 0, x: 20, stagger: 0.2, duration: 0.4 }, t + 0.3);
-      $$(".brief .m", s).slice(0, 3).forEach((m, i) => { tl.fromTo(m, { "--ok": 0 }, { "--ok": 1, duration: 0.1 }, t + 1.3 + i * 0.35); call(tl, () => sfx("tick", 0.5), t + 1.3 + i * 0.35); });
+      tl.fromTo($(".brief .gb", s), { scale: 0.2, opacity: 0 }, { scale: 1, opacity: 0.85, duration: 1.2, ease: "power2.out" }, t + 0.4); call(tl, () => { sonar(0.12); boom(0.8); }, t + 0.4); flash(tl, t + 0.4, 0.5); shake(tl, $(".bg", s), t + 0.4, 18, 0.6);
     });
   } });
 
 // 11 ── 04 features: four cards deal in
-const F = [["f_weapon", "무기 수집", "인간형 크리쳐의 무기를 문명에서 발견해 개조한다"], ["f_survive", "생존", "크리쳐를 요리해 먹고, 해초로 치료제를 만든다"], ["f_craft", "제조", "스캐너로 재료를 스캔하면 정부 연구로 레시피가 열린다"], ["f_combat", "전투", "만든 무기로 4명이 힘을 합쳐 크리쳐를 사냥한다"]];
+const F = [["f_survive", "생존", "산소 · 연료를 지키며 버틴다"], ["humanoid", "심해 전투", "어둠 속 크리쳐와 싸운다"], ["f_craft", "제조 · 강화", "재료로 무기와 잠수정을 만든다"], ["f_combat", "거대 크리쳐 사냥", "4명이 함께 층의 주인을 잡는다"]];
 S.push({ depth: 3200, html: () => `
   <div class="bg" style="background-image:url(img/sub.jpg)"></div><div class="veil" style="opacity:.75"></div><div class="wmk">04</div>
-  <div class="content" style="width:1600px">${kick("04", "게임 특징")}<div class="h1" style="margin-top:12px">사람들이 재미를 느낄 네 가지</div></div>
+  <div class="content" style="width:1600px">${kick("04", "게임 특징")}<div class="h1" style="margin-top:12px">생존 → 전투 → 제조 → 거대 크리쳐</div></div>
   ${F.map(([im, t, d], i) => `<div class="fcard" style="left:${120 + i * 412}px;top:410px"><div class="im" style="background-image:url(img/${im}.jpg)"><div class="n">0${i + 1}</div></div><div class="bl" style="${i === 3 ? "background:var(--red)" : ""}"></div><div class="t">${t}</div><div class="d">${d}</div></div>`).join("")}
-  ${diveHTML("04", "게임 특징", 3200, "크리쳐는 먼저 찍어야 약점이 보인다.")}`,
+  ${diveHTML("04", "게임 특징", 3200, "층의 주인을 쓰러뜨려야 다음 층이 열린다.")}`,
   build(s, tl) {
     const T = dive(tl, s, 3000, 3200);
     rise(tl, [$(".kick", s), $(".h1", s)], T);
@@ -536,8 +570,51 @@ S.push({ depth: 3200, html: () => `
     });
   } });
 
+// 13b ── what the four of you actually do in a hunt (proposal, team to confirm)
+const ROLES = [["helm", "조타수", "PILOT", "잠수정 조종 · 라이트로 유인"], ["cam", "촬영수", "SPOTTER", "약점을 찍어 모두에게 표시"], ["harpoon", "사수", "GUNNER", "작살로 약점 집중 공격"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란"]];
+S.push({ depth: 3200, html: () => `
+  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.8"></div>
+  <div class="content" style="width:1600px">${kick("04 — 2", "협동 사냥 · 제안")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
+  ${ROLES.map(([ic, n, en, d], i) => `<div class="role" style="left:${120 + i * 410}px;top:300px">${ico(ic)}<div class="rn"><small>${en}</small>${n}</div><div class="rd">${d}</div></div>`).join("")}
+  <div class="hunt">${["유인", "약점 촬영", "집중 공격", "수리 · 교란", "샘플 회수"].map((t) => `<div>${t}</div>`).join("<i>→</i>")}</div>
+  <div class="vs"><div><b>서브노티카</b>는 혼자 하는 탐험 → <b>우리</b>는 4명이 하는 사냥</div><div><b>리썰 컴퍼니</b>는 파밍과 도망 → <b>우리</b>는 거대 크리쳐와 협동 전투</div></div>`,
+  build(s, tl) {
+    tl.from($(".bg", s), { opacity: 0, scale: 1.15, duration: 1.6, ease: "power2.out" }, 0);
+    rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
+    $$(".role", s).forEach((r, i) => { tl.from(r, { y: 80, opacity: 0, duration: 0.6, ease: "expo.out" }, 0.6 + i * 0.25); call(tl, () => sfx("tick", 0.6), 0.6 + i * 0.25); });
+    $$(".hunt > div", s).forEach((h, i) => tl.to(h, { color: i === 2 ? "#FF4B3E" : "#EAF2F4", borderBottomColor: i === 2 ? "#FF4B3E" : "#5FE3D3", duration: 0.25 }, 1.9 + i * 0.4));
+    rise(tl, $$(".vs > div", s), 4.0, { s: 0.2 });
+  } });
+
+// 14b ── how a hunt plays out with four people: a four-panel storyboard (proposal, team to confirm)
+const RC4 = { P: "#5FE3D3", S: "#FFB547", G: "#FF4B3E", E: "#EAF2F4" };
+const diverDot = (x, y, r) => `<g><circle cx="${x}" cy="${y}" r="13" fill="${RC4[r]}"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="#031014">${r}</text></g>`;
+const beast = '<path d="M210 70 C 300 40, 360 110, 330 170 C 300 230, 200 220, 170 170 C 140 120, 160 85, 210 70 Z" fill="#0b1a20" stroke="#2b3f47" stroke-width="2"/><path d="M175 165 L120 205 L150 160 Z" fill="#0b1a20"/><circle cx="290" cy="110" r="9" fill="#FF4B3E"/>';
+const PANELS = [
+  ["유인", "조타수(P)가 라이트로 크리쳐를 동굴 밖으로 끌어낸다", `<path d="M40 230 L230 120 L250 150 Z" fill="rgba(95,227,211,.25)"/>${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
+  ["약점 표시", "촬영수(S)가 찍으면 약점이 모두의 화면에 표시된다", `<circle cx="250" cy="175" r="18" fill="none" stroke="#FFB547" stroke-width="3" class="mk"/><path d="M232 175h36M250 157v36" stroke="#FFB547" stroke-width="2"/><circle cx="80" cy="60" r="34" fill="rgba(255,255,255,.35)" class="fl"/>${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
+  ["집중 공격", "사수(G)와 동료들이 표시된 약점에 작살을 모은다", `<circle cx="250" cy="175" r="18" fill="none" stroke="#FFB547" stroke-width="3"/>${[[60, 150], [80, 60], [40, 230]].map(([x, y]) => `<line x1="${x}" y1="${y}" x2="248" y2="174" stroke="#FF4B3E" stroke-width="3" class="hp" pathLength="1" stroke-dasharray="1"/>`).join("")}${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
+  ["위기 대응", "반격에 선체가 깨지면 정비공(E)이 수리, 미끼로 시선을 돌린다", `<path d="M20 250 h90 v-34 h-90 z" fill="#2a3a40" stroke="#5FE3D3"/><path d="M70 216 l8 12 -10 6 8 12" stroke="#FF4B3E" stroke-width="3" fill="none"/><circle cx="160" cy="250" r="8" fill="#FFB547" class="bt"/>${diverDot(40, 230, "P")}${diverDot(110, 90, "S")}${diverDot(90, 160, "G")}${diverDot(70, 200, "E")}`],
+];
+const EXTRA = ["산소 나눠 쓰기", "쓰러진 대원 끌고 오기", "무거운 샘플 함께 운반", "가까이 있어야 들리는 음성 통신"];
+S.push({ depth: 3200, html: () => `
+  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.88"></div>
+  <div class="content" style="width:1600px">${kick("04 — 3", "협동 사냥 예시 · 제안")}<div class="h1" style="margin-top:12px">협동은 이렇게 한다</div></div>
+  ${PANELS.map(([t, d, art], i) => `<div class="panel4" style="left:${120 + i * 410}px;top:300px"><div class="pn"><b class="num">0${i + 1}</b> ${t}</div>
+    <div class="pwrap"><svg viewBox="0 0 380 280" width="380" height="280">${beast}${art}</svg><div class="pimg" style="background-image:url(img/${["coop_lure", "coop_mark", "coop_strike", "coop_crisis"][i]}.jpg);background-position:${["82% 50%", "68% 50%", "50% 50%", "45% 50%"][i]}"></div></div><div class="pd">${d}</div></div>`).join("")}
+  <div class="extra"><b>그 밖의 협동</b>${EXTRA.map((e) => `<i>${e}</i>`).join("")}</div>`,
+  build(s, tl) {
+    tl.from($(".bg", s), { opacity: 0, duration: 1.2 }, 0); rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
+    $$(".panel4", s).forEach((pnl, i) => { const at = 0.6 + i * 1.1;
+      tl.from(pnl, { y: 60, opacity: 0, duration: 0.6, ease: "expo.out" }, at); call(tl, () => sfx(i === 2 ? "rumble" : "tick", 0.6), at + 0.3);
+      if (i === 1) { tl.fromTo($(".fl", pnl), { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.08 }, { opacity: 0, duration: 0.5 }] }, at + 0.5).from($(".mk", pnl), { scale: 2, opacity: 0, transformOrigin: "250px 175px", duration: 0.3 }, at + 0.6); call(tl, () => sfx("shutter", 0.6), at + 0.5); }
+      if (i === 2) tl.fromTo($$(".hp", pnl), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.35, stagger: 0.1 }, at + 0.5);
+      if (i === 3) { shake(tl, pnl, at + 0.4, 10, 0.4); tl.from($(".bt", pnl), { x: -80, duration: 0.6 }, at + 0.6); } });
+    rise(tl, [$(".extra b", s), ...$$(".extra i", s)], 5.2, { s: 0.1, y: 12 });
+  } });
+
 // 12–16 ── 05 progress, with a five-step tracker on top
-const STEPS = ["스토리 시작", "1차 탐험", "정비 · 제작", "크리쳐 조우", "엔딩"];
+const STEPS = ["스토리 시작", "1차 탐험", "정비 · 제작", "거대 크리쳐 사냥", "엔딩"];
 const steps = (cur) => `<div class="steps">${STEPS.map((t, i) => `<div class="${i < cur ? "done" : i === cur ? "cur" : ""}">${t}</div>`).join("")}</div>`;
 S.push({ depth: 4000, html: () => `
   <div class="bg" style="background-image:url(img/title.jpg)"></div><div class="veil" style="opacity:.55"></div><div class="shadeL"></div>${steps(0)}
@@ -546,12 +623,12 @@ S.push({ depth: 4000, html: () => `
   <div class="mail" style="left:980px;top:250px"><div class="top"><span class="dot"></span>[긴급] 해군 심해 탐사대 작전 지시</div><div class="meta">보낸 사람: 국가 해양 연구청 &nbsp;·&nbsp; 받는 사람: 탐사대 04</div>
     <div class="bodyt">탐사대원 여러분.
 
-잠수정을 이용해 각 수심의 문명과 크리쳐를 촬영하고, 샘플을 회수하십시오. 연료와 선체 상태에 유의하십시오.
+각 층의 주인을 사냥하고 샘플을 회수하십시오. 연료와 선체 상태에 유의하십시오.
 
 행운을 빕니다.</div>
     <div class="acts"><span class="btn acc">임무 수락<kbd>ENTER</kbd></span><span class="btn">나중에</span></div></div>
-  ${toast("MISSION ACCEPTED", "1차 잠수 — 목표 수심 4,800 m", "top:130px")}
-  ${diveHTML("05", "게임 진행", 4000, "정부의 메일은 잠수마다 새 임무를 준다.")}`,
+  ${toast("MISSION ACCEPTED", "1차 잠수 — 표적: 심층의 인간형 크리쳐", "top:130px")}
+  ${diveHTML("05", "게임 진행", 4000, "잠수마다 새 사냥 표적이 주어진다.")}`,
   build(s, tl) {
     const T = dive(tl, s, 3200, 4000);
     rise(tl, [$(".kick", s), $(".h1", s)], T); tl.from($$(".steps > div", s), { opacity: 0, y: -10, stagger: 0.06, duration: 0.4 }, T);
@@ -565,15 +642,15 @@ S.push({ depth: 4000, html: () => `
     toastIn(tl, $(".toast", s), e + 1.0);
   } });
 // quest log: three objectives tick off, then QUEST COMPLETE refuels the sub (watch the HUD)
-const QL = [["문명 탐험", "무너진 건축물과 유물을 조사한다", 2], ["자원 수집", "폐품 · 연료 · 희귀 자원을 모은다", 15], ["사진 촬영", "정부 미션에 맞춰 크리쳐 · 문명을 찍는다", 3]];
+const QL = [["재료 채집", "폐품 · 연료 · 광석을 모은다", 15], ["크리쳐 사냥", "작은 크리쳐를 잡아 샘플 확보", 5], ["층의 주인 추적", "소나로 거대 크리쳐를 찾는다", 1]];
 S.push({ depth: 4800, pre: [71, 64, 1], html: () => `
   <div class="bg" style="background-image:url(img/ruins.jpg)"></div><div class="veil" style="opacity:.35"></div><div class="shadeL"></div>${steps(1)}
   <div class="content" style="width:780px">${kick("05 — 2 / 5", "게임 진행")}<div class="h1" style="margin:12px 0 30px">1차 심해 탐험</div>
-    <div class="body">정부의 첫 임무를 받고 내려간다. 층을 돌며 문명을 조사하고, 자원을 모으고, 크리쳐와 문명을 찍는다.</div></div>
+    <div class="body">모으고, 사냥하고,<br>층의 주인을 쫓는다.</div></div>
   <div class="gpanel quest" style="left:990px;top:250px;width:750px">${mock()}<div class="gh">QUEST LOG <em>메인 임무</em></div>
-    <div class="qt"><b>1차 잠수 — 정부 임무</b><span>목표 수심 4,800 m</span></div>
+    <div class="qt"><b>1차 잠수 — 사냥 임무</b><span>목표 수심 4,800 m</span></div>
     ${QL.map(([h, d, n]) => `<div class="q"><div class="bx"></div><div><div class="tt"><b>${h}</b><i class="st"></i></div><div class="d">${d}</div></div><div class="c"><span class="v">0</span> / ${n}</div></div>`).join("")}
-    <div class="rw"><b>REWARD</b>연구 자료 → 정부 연구 → 레시피 해금</div>
+    <div class="rw"><b>REWARD</b>샘플 → 새 무기 · 잠수정 강화</div>
     <div class="qdone">QUEST COMPLETE</div></div>`,
   build(s, tl) {
     tl.from($(".bg", s), { scale: 1.15, opacity: 0, duration: 1.6, ease: "power2.out" }, 0);
@@ -596,17 +673,17 @@ S.push({ depth: 4800, pre: [71, 64, 1], html: () => `
   } });
 // workbench: the five-link chain on the left drives the bench on the right; the repair restores the HUD hull
 const INV = [["scrap", "폐품", 12], ["vial", "발광 샘플", 1], ["weed", "해초", 4], ["ore", "광석", 2], ["fuel", "연료", 1], [null, "", 0]];
-const RC = ["재료 수집", "스캐너로 스캔", "정부 연구", "레시피 해금", "제작 · 수리"];
+const RC = ["재료 수집", "샘플 분석", "레시피 해금", "무기 제작", "잠수정 강화"];
 S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
   <div class="bg" style="background-image:url(img/specimen.jpg)"></div><div class="veil" style="opacity:.45"></div><div class="shadeL"></div>${steps(2)}
   <div class="content" style="width:820px">${kick("05 — 3 / 5", "게임 진행")}<div class="h2" style="margin:12px 0 44px">잠수정 정비와<br>무기 제작</div>
     <div class="chain"><div class="ln" style="top:48px;height:${96 * 4}px"><i></i></div>${RC.map((t) => `<div><span class="dot"></span>${t}</div>`).join("")}</div>
-    <div class="body pr" style="margin-top:26px;font-size:22px">무기 · 방어구 · 치료제를 만들고, 수압으로 망가진 선체를 폐품으로 고친다.</div></div>
+    <div class="body pr" style="margin-top:26px;font-size:26px">샘플로 무기를, 폐품으로 선체를.</div></div>
   <div class="gpanel bench" style="left:940px;top:230px;width:800px;height:650px">${mock()}<div class="gh">WORKBENCH <em>잠수정 제작대</em></div>
     <div class="inv">${INV.map(([k, n, q]) => `<div class="slot${k ? "" : " empty"}">${k ? ico(k) + `<span class="q">×${q}</span><span class="nm">${n}</span>` : ""}</div>`).join("")}</div>
     <div class="scan"><div class="ghost">${ico("vial")}</div><div class="bm"></div><div class="pct">SCAN <span class="v">0</span>%</div></div>
-    <div class="upl"><div class="lb"><span>정부 연구소로 전송</span><span class="v2">0%</span></div><div class="bar"><i></i></div></div>
-    <div class="recipe"><div class="ic">${ico("harpoon")}</div><div><div class="t"><small>RECIPE UNLOCKED</small>발광 작살</div><div class="rq">발광 샘플 1 · 광석 2 · 폐품 4</div></div><div class="btn">제작</div></div>
+    <div class="upl"><div class="lb"><span>샘플 분석</span><span class="v2">0%</span></div><div class="bar"><i></i></div></div>
+    <div class="recipe"><div class="ic" style="width:200px;height:96px;background:radial-gradient(ellipse at 70% 40%,rgba(95,227,211,.25),transparent 70%),#061015">${HARP}</div><div><div class="t"><small>RECIPE UNLOCKED</small>발광 작살</div><div class="rq">발광 샘플 1 · 광석 2 · 폐품 4</div></div><div class="btn">제작</div></div>
     <div class="repair"><b>REPAIR</b><span>폐품 4개로 선체 수리</span><div class="bar"><i></i></div><em class="hv">HULL 66%</em></div></div>`,
   build(s, tl) {
     tl.from($(".bg", s), { opacity: 0, duration: 1.2 }, 0);
@@ -624,7 +701,7 @@ S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
     tl.to($$(".slot", s)[1], { borderColor: "#5FE3D3", duration: 0.2 }, step(1)).set($(".scan .ghost", s), { opacity: 1 }, step(1))
       .fromTo($(".scan .bm", s), { top: 0 }, { top: 207, duration: 0.5, repeat: 1, yoyo: true, ease: "sine.inOut" }, step(1));
     count(tl, $(".scan .v", s), 0, 100, step(1), 1.0, (v) => Math.round(v));
-    // 3 send it to the government lab
+    // 3 analyse the sample
     tl.to($(".upl .bar i", s), { width: "100%", duration: 0.9, ease: "power1.inOut" }, step(2)); count(tl, $(".upl .v2", s), 0, 100, step(2), 0.9, (v) => Math.round(v) + "%");
     // 4 the recipe flips in
     tl.set($(".recipe", s), { opacity: 1 }, step(3)).from($(".recipe", s), { rotationX: 90, transformPerspective: 800, transformOrigin: "50% 0%", duration: 0.5, ease: "back.out(1.6)" }, step(3));
@@ -641,11 +718,11 @@ S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
     rise(tl, $(".pr", s), f + 1.3);
   } });
 // encounter: eyes in the dark (the photo goes into the codex), click → the hunt costs hull
-const EN = [["발견", "어둠 속에서 빛나는 눈"], ["촬영", "약점을 알기 위해 먼저 찍는다"], ["사냥", "4명이 함께 공격한다"], ["샘플 회수", "시체에서 연구 샘플을 얻는다"]];
+const EN = [["유인", "조타수가 라이트로 끌어낸다"], ["약점 촬영", "촬영수가 약점을 표시한다"], ["집중 공격", "사수가 약점에 작살을 꽂는다"], ["버티고 회수", "정비공이 수리, 샘플 회수"]];
 S.push({ depth: 6400, pre: [100, 82, 3], html: () => `
-  <div class="bg" style="background-image:url(img/humanoid.jpg)"></div><div class="veil" style="opacity:.86"></div><div class="shadeL"></div>${steps(3)}
+  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.86"></div><div class="shadeL"></div>${steps(3)}
   <img class="abs eyes" src="img/eyes.png" style="left:1250px;top:330px;width:340px;opacity:0">
-  <div class="content">${kick("05 — 4 / 5", "게임 진행")}<div class="h1" style="margin:12px 0 60px">크리쳐 조우</div>
+  <div class="content">${kick("05 — 4 / 5", "게임 진행")}<div class="h1" style="margin:12px 0 60px">거대 크리쳐 사냥</div>
     <div class="enc">${EN.map(([h, d], i) => `<div><b class="n" style="${i === 2 ? "color:var(--red)" : ""}">0${i + 1}</b><b>${h}</b><span>${d}</span></div>`).join("")}</div></div>
   <div class="abs redwash" style="inset:0;background:var(--red);mix-blend-mode:multiply;opacity:0"></div>`,
   build(s, tl) {
@@ -668,9 +745,10 @@ S.push({ depth: 7200, html: () => `
   <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.66"></div><div class="caus"></div>${steps(4)}
   <div class="abs" style="left:0;right:0;top:250px;text-align:center">${kick("05 — 5 / 5", "게임 진행")}
     <div class="disp bigd" style="font-size:250px;margin-top:20px">${rgb('<span class="v">0</span> M')}</div>
-    <div class="h2 hh" style="margin-top:20px;font-size:52px">바닥에 도착하면, 엔딩</div>
-    <div class="body pp" style="margin-top:12px">크리쳐 문명의 중심. 모든 사진과 샘플이 정부로 전송된다.</div>
-    <div class="num mc" style="font-size:24px;font-weight:700;letter-spacing:.7em;color:var(--amber);margin-top:60px">MISSION COMPLETE</div></div>`,
+    <div class="h2 hh" style="margin-top:20px;font-size:56px">바닥에 닿은 순간, 문명이 깨어났다</div>
+    <div class="body pp" style="margin-top:14px;font-size:32px;color:var(--ink)">그들은 적이 아니었다. 더 아래에 잠든 것을 막고 있었다.</div>
+    <div class="num mc" style="font-size:26px;font-weight:700;letter-spacing:.5em;color:var(--red);margin-top:56px">WARNING · 초대형 반응 감지</div>
+    <div class="small" style="margin-top:22px;font-size:17px;color:var(--faint)">엔딩 반전 · 팀 확인 전 제안</div></div>`,
   build(s, tl) {
     const vs = $$(".bigd .v", s), bg = $(".bg", s);
     tl.from(bg, { opacity: 0, scale: 1.25, duration: 2.4, ease: "power2.out" }, 0); rise(tl, $(".kick", s), 0.4);
@@ -681,8 +759,8 @@ S.push({ depth: 7200, html: () => `
     flash(tl, 3.0, 1, 0.5); split(tl, $(".bigd .rgb", s), 3.0, 30); shake(tl, $(".bigd", s), 3.0, 26, 0.5);
     tl.fromTo($(".bigd", s), { scale: 1.25 }, { scale: 1, duration: 0.6, ease: "back.out(2)", immediateRender: false }, 3.0);
     rise(tl, $(".hh", s), 3.6); type(tl, $(".pp", s), 4.0, 30);
-    tl.from($(".mc", s), { opacity: 0, letterSpacing: "1.6em", duration: 1.3, ease: "expo.out" }, 5.8);
-    loop(7.2, () => gsap.to($(".mc", s), { opacity: 0.3, duration: 0.8, repeat: -1, yoyo: true }));
+    tl.from($(".mc", s), { opacity: 0, letterSpacing: "1.6em", duration: 1.3, ease: "expo.out" }, 6.4); call(tl, () => { sfx("alarm", 0.7); boom(1); }, 6.4); flash(tl, 6.4, 0.5); shake(tl, $(".bg", s), 6.4, 26, 0.8);
+    loop(7.8, () => gsap.to($(".mc", s), { opacity: 0.3, duration: 0.5, repeat: -1, yoyo: true, ease: "steps(1)" }));
     drift(bg, 3, 1.1, 24); causLoop(s);
   } });
 
@@ -700,15 +778,15 @@ S.push({ depth: 8800, html: () => `
     $$(".xp > div", s).forEach((x, i) => tl.from(x, { opacity: 0, x: -40, duration: 0.6, ease: "power3.out" }, T + 0.6 + i * 0.35));
     drift($(".bg", s), T + 2, 1.05);
   } });
-const HW = [["", "리썰 컴퍼니", "클레트카", "Deep Sea Diver (목표)"], ["OS", "Windows 10 64bit", "Windows 10 64bit", "Windows 10 64bit"], ["CPU", "Intel Core i5-7400", "Intel Core i5", "Intel Core i5 7세대"],
-  ["메모리", "—", "6 GB", "8 GB"], ["그래픽", "GTX 1050", "GTX 650", "GTX 1050"], ["DirectX", "11", "12", "11"], ["저장 공간", "4 GB", "3 GB", "5 GB"]];
+const HW = [["", "리썰 컴퍼니", "클레트카", "Deep Sea Diver (목표)"], ["OS", "Windows 10 64bit", "Windows 10 64bit", "Windows 10 / 11 64bit"], ["CPU", "Intel Core i5-7400", "Intel Core i5", "Intel i5-9400 / Ryzen 5 3600"],
+  ["메모리", "—", "6 GB", "16 GB"], ["그래픽", "GTX 1050", "GTX 650", "GTX 1660 Super / RX 5600 XT"], ["DirectX", "11", "12", "12"], ["저장 공간", "4 GB", "3 GB", "30 GB"]];
 S.push({ depth: 9200, html: () => `
   <div class="bg" style="background-image:url(img/sub.jpg)"></div><div class="veil" style="opacity:.84"></div>
-  <div class="content" style="width:1600px">${kick("06", "하드웨어 요구사항")}<div class="h1" style="margin-top:12px">비슷한 게임과 같은 사양을 목표로</div></div>
+  <div class="content" style="width:1600px">${kick("06", "하드웨어 요구사항")}<div class="h1" style="margin-top:12px">심해 표현을 위해, 한 단계 높은 사양</div></div>
   <div class="gpanel con" style="left:120px;top:310px;width:1620px;height:600px"><div class="gh">SYSTEM CHECK <em>최소 사양 비교 · Steam 상점 기준</em></div>
     <div class="term">&gt; DEEP SEA DIVER — 최소 사양 점검</div>
     <div class="tw"><div class="scanl"></div><table class="hw"><tr>${HW[0].map((c, j) => `<th class="${j === 3 ? "us" : ""}">${c}</th>`).join("")}</tr>${HW.slice(1).map((r) => `<tr>${r.map((c, j) => `<td class="${j === 3 ? "us" : ""}">${c}${j === 3 ? '<span class="ok">OK</span>' : ""}</td>`).join("")}</tr>`).join("")}</table></div>
-    <div class="term res">&gt; 결과: 리썰 컴퍼니와 같은 수준의 최소 사양을 목표로 한다</div></div>
+    <div class="term res">&gt; 수중 조명 · 물결 셰이더 · 파티클 이펙트 → GTX 1660급 이상 (출시 2년 뒤 기준)</div></div>
   <div class="small src" style="position:absolute;left:120px;top:932px;font-size:16px">출처: Steam 상점 최소 사양 (2026.10 확인). 리썰 컴퍼니는 메모리 항목이 표기되지 않음. 목표 사양은 팀 기획안.</div>`,
   build(s, tl) {
     rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
@@ -726,8 +804,8 @@ S.push({ depth: 9200, html: () => `
   } });
 
 // 19–20 ── 07 positioning (sonar sweep finds each game) + market (reference dossiers)
-const STP = [["S — 세분화", "PC 협동 게임 · 공포 게임 이용자"], ["T — 타깃", "친구와 함께 무서운 게임을 하는 10~20대, 게임 방송 시청자"], ["P — 포지셔닝", "심해라는 미지 + 4인 협동 + 촬영 · 연구 루프"]];
-const PTS = [["서브노티카", 0.25, 0.42], ["리썰 컴퍼니", 0.8, 0.3], ["클레트카", 0.68, 0.18], ["레포", 0.86, 0.6], ["백룸", 0.4, 0.16]];
+const STP = [["S — 세분화", "PC 협동 게임 · 공포 게임 이용자"], ["T — 타깃", "친구와 함께 무서운 게임을 하는 10~20대, 게임 방송 시청자"], ["P — 포지셔닝", "심해라는 미지 + 역할을 나눈 4인 거대 크리쳐 사냥"]];
+const PTS = [["서브노티카", 0.25, 0.42], ["리썰 컴퍼니", 0.8, 0.3], ["클레트카", 0.68, 0.18], ["R.E.P.O. (2025 협동 호러)", 0.86, 0.6], ["백룸", 0.4, 0.16]];
 const RCX = 1330, RCY = 590, RR = 380, rpos = (px, py) => [RCX + (px - 0.5) * 2 * RR * 0.92, RCY + (py - 0.5) * 2 * RR * 0.92];
 const ang = (x, y) => ((Math.atan2(x - RCX, -(y - RCY)) * 180) / Math.PI + 360) % 360;
 S.push({ depth: 9600, html: () => `
@@ -757,24 +835,24 @@ S.push({ depth: 9600, html: () => `
   } });
 // drop a screenshot at img/m_<name>.jpg (e.g. m_lethal_company.jpg) and it replaces the static on that file
 // [en, kr, tags, took, differs, release, reviews, positive, all-time peak players] — Steam store + SteamCharts, checked 2026-10-29
-const FILES = [["KLETKA", "클레트카", ["협동", "호러", "엘리베이터 하강"], "아래로만 가는 탈것", "수압 위협 + 4인 협동", "2026.02", "1,688", "87%", "3,628"],
-  ["SUBNAUTICA", "서브노티카", ["생존", "제작", "해양 탐험"], "심해 공포 · 제작 루프", "층별 하강 · 협동", "2018.01", "189,993", "96%", "50,876"],
-  ["LETHAL COMPANY", "리썰 컴퍼니", ["협동", "호러", "파밍"], "파밍 → 할당량 루프", "촬영 · 연구로 해금", "2023.10", "276,800", "97%", "239,369"],
-  ["DAVE THE DIVER", "데이브 더 다이버", ["해양 탐험", "경영", "요리"], "탐험 + 요리 결합", "호러 톤의 생존 요리", "2023.06", "51,527", "96%", "98,281"]];
+const FILES = [["KLETKA", "클레트카", ["협동", "호러", "엘리베이터 하강"], "아래로만 가는 탈것", "수압 위협 + 4인 협동", "2026.02", "63만 장", "87%", "3,628"],
+  ["SUBNAUTICA", "서브노티카", ["생존", "제작", "해양 탐험"], "심해 공포 · 제작 루프", "혼자가 아닌 4인 역할 사냥", "2018.01", "1,080만 장", "96%", "50,876"],
+  ["LETHAL COMPANY", "리썰 컴퍼니", ["협동", "호러", "파밍"], "4인 협동 호러", "파밍 대신 거대 크리쳐 사냥", "2023.10", "1,650만 장", "97%", "239,369"],
+  ["DAVE THE DIVER", "데이브 더 다이버", ["해양 탐험", "경영", "요리"], "탐험 + 요리 결합", "호러 톤의 생존 요리", "2023.06", "750만 장", "96%", "98,281"]];
 S.push({ depth: 9800, html: () => `
   <div class="bg" style="background-image:url(img/crew2.jpg)"></div><div class="veil" style="opacity:.82"></div>
   <div class="content" style="width:1600px">${kick("07", "시장조사")}<div class="h1" style="margin-top:12px">가져온 것과, 다른 것</div></div>
   ${FILES.map(([en, kr, tags, a, b, rel, rv, pos, pk], i) => `<div class="file" style="left:${120 + i * 408}px;top:330px;transform:rotate(${[-1.5, 1, -0.8, 1.6][i]}deg)"><div class="tab">FILE 0${i + 1}</div>
     <div class="sig" style="background:url(img/m_${en.toLowerCase().replace(/ /g, "_")}.jpg) center/cover, var(--noise) 0 0/256px 256px, #10181c"><span>${en}</span></div>
     <div class="kr">${kr}<small class="num">${rel}</small></div><div class="tags">${tags.map((t) => `<i>${t}</i>`).join("")}</div>
-    <div class="stat"><div><b class="num">${rv}</b><span>Steam 리뷰</span></div><div><b class="num">${pos}</b><span>긍정</span></div><div><b class="num">${pk}</b><span>최고 동접</span></div></div>
+    <div class="stat"><div><b class="num">${rv}</b><span>판매량 (추정)</span></div><div><b class="num">${pos}</b><span>긍정</span></div><div><b class="num">${pk}</b><span>최고 동접</span></div></div>
     <div class="row a"><em>가져온 것</em>${a}</div><div class="row b"><em>다른 점</em>${b}</div><div class="stampR">REFERENCE</div></div>`).join("")}
-  <div class="small src" style="position:absolute;left:120px;top:962px;font-size:16px;color:var(--dim)">출처: Steam 스토어(출시일 · 리뷰 수 · 긍정 비율 · 이미지), SteamCharts(역대 최고 동시 접속자) — 2026.10.29 조회</div>`,
+  <div class="small src" style="position:absolute;left:120px;top:962px;font-size:16px;color:var(--dim)">출처: 판매량 Gamalytic 추정치(Steam, 2026.11.02 조회) · 출시일 · 긍정 비율 · 이미지 Steam 스토어 · 최고 동접 SteamCharts</div>`,
   build(s, tl) {
     rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
     $$(".file", s).forEach((f, i) => { const at = 0.5 + i * 0.3;
       tl.from(f, { y: 600, rotation: (i % 2 ? 12 : -12), duration: 0.8, ease: "expo.out" }, at); call(tl, () => sfx("tick", 0.5), at + 0.2);
-      $$(".stat b", f).forEach((b) => { const raw = b.textContent, n = parseFloat(raw.replace(/[,%]/g, "")); count(tl, b, 0, n, at + 0.4, 1.0, (v) => (raw.includes("%") ? Math.round(v) + "%" : fmt(v))); });
+      $$(".stat b", f).forEach((b) => { const raw = b.textContent, n = parseFloat(raw.replace(/[,%]/g, "")); count(tl, b, 0, n, at + 0.4, 1.0, (v) => fmt(v) + raw.replace(/[\d,.]/g, "")); });
       tl.from($(".stampR", f), { scale: 2.6, opacity: 0, duration: 0.16, ease: "power4.in" }, 2.0 + i * 0.25); call(tl, () => sfx("tick", 0.9), 2.16 + i * 0.25); });
     rise(tl, $(".src", s), 2.4);
   } });
@@ -864,7 +942,7 @@ S.push({ depth: 10900, html: () => `
   } });
 
 // hull / fuel / codex at the end of each page (HUD); `pre` above is the state before a page's own event
-const HUDT = [[100, 100, 0], [100, 100, 0], [99, 98, 0], [99, 98, 0], [94, 92, 0], [94, 92, 0], [89, 86, 1], [89, 86, 1], [88, 85, 1], [86, 83, 1], [84, 80, 1], [82, 77, 1], [81, 76, 1],
+const HUDT = [[100, 100, 0], [100, 100, 0], [99, 98, 0], [99, 98, 0], [94, 92, 0], [94, 92, 0], [94, 92, 0], [89, 86, 1], [89, 86, 1], [88, 85, 1], [86, 83, 1], [84, 80, 1], [82, 77, 1], [81, 76, 1], [81, 76, 1], [81, 76, 1],
   [76, 70, 1], [71, 95, 3], [100, 93, 3], [68, 82, 4], [66, 70, 4], [62, 48, 4], [61, 42, 4], [60, 37, 4], [59, 34, 4], [57, 27, 4], [55, 18, 4]];
 S.forEach((p, i) => (p.hud = HUDT[i]));
 
