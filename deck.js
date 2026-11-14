@@ -272,7 +272,7 @@ const ico = (k) => `<svg viewBox="0 0 48 48">${ICON[k]}</svg>`;
 // the glowing harpoon drawn as an object (shaft, barbed head, light at the tip) for the workbench recipe
 const HARP = `<svg class="harp" viewBox="0 0 200 96"><defs><linearGradient id="hs" x1="0" x2="1"><stop offset="0" stop-color="#3a4a52"/><stop offset="1" stop-color="#9fb7c1"/></linearGradient><filter id="hg"><feGaussianBlur stdDeviation="4"/></filter></defs><path d="M14 70 L150 34" stroke="url(#hs)" stroke-width="7" stroke-linecap="round" fill="none"/><path d="M24 66l-10 12M34 63l-8 12" stroke="#5a6a72" stroke-width="4"/><path d="M146 28 L186 22 L156 46 Z" fill="#5FE3D3" filter="url(#hg)" opacity=".9"/><path d="M148 30 L184 23 L156 44 Z M156 44 L150 52 M150 33 L142 26" fill="#c9fff7" stroke="#5FE3D3" stroke-width="2"/><circle cx="178" cy="25" r="10" fill="#5FE3D3" filter="url(#hg)" opacity=".7"/></svg>`;
 
-// 03b ── 01 core loop: dive → shoot & gather → government lab → craft & upgrade → deeper
+// 03b ── 01 core loop: each step slams onto the screen on the beat, then drops into its place on the ring
 const LOOPN = [["fuel", "생존", "산소 · 연료를 지키며 하강"], ["harpoon", "심해 전투 · 채집", "크리쳐를 사냥해 재료를 얻는다"], ["scrap", "제조 · 강화", "부품 생산, 무기 · 잠수정 강화"], ["eye", "거대 크리쳐 사냥", "4명이 함께 층의 주인을 쓰러뜨린다"]];
 const LCX = 1240, LCY = 590, LR = 230, lpos = (k) => [LCX + LR * Math.sin((k * Math.PI) / 2), LCY - LR * Math.cos((k * Math.PI) / 2)];
 const arcD = (k) => { const a0 = (k * 90 + 16) * Math.PI / 180, a1 = (k * 90 + 74) * Math.PI / 180, P = (a) => `${LCX + LR * Math.sin(a)} ${LCY - LR * Math.cos(a)}`; return `M${P(a0)} A${LR} ${LR} 0 0 1 ${P(a1)}`; };
@@ -285,25 +285,39 @@ S.push({ depth: 200, html: () => `
     ${[0, 1, 2, 3].map((k) => `<path class="arc" d="${arcD(k)}" fill="none" stroke="#5FE3D3" stroke-width="3" marker-end="url(#ah)"/>`).join("")}</svg>
   <div class="abs lmid" style="left:${LCX - 150}px;top:${LCY - 70}px;width:300px;text-align:center"><div class="kick" style="letter-spacing:.3em">GOAL</div><div class="disp" style="font-size:84px;margin-top:8px">10,900 m</div><div class="small" style="margin-top:6px">바닥에 닿으면 엔딩</div></div>
   <div class="abs ldot"></div>
-  ${LOOPN.map(([ic, t, d], k) => { const [x, y] = lpos(k); return `<div class="lnode" style="left:${x - 62}px;top:${y - 62}px">${ico(ic)}</div>
+  ${LOOPN.map(([ic, t, d], k) => { const [x, y] = lpos(k); return `<div class="lnode${k === 3 ? " lboss" : ""}" style="left:${x - 62}px;top:${y - 62}px">${ico(ic)}</div>
     <div class="ltext" style="${k === 1 ? `left:${x + 78}px;top:${y - 42}px;text-align:left` : k === 3 ? `left:${x - 328}px;top:${y - 42}px;text-align:right;direction:rtl` : `left:${x - 140}px;top:${k === 0 ? y - 172 : y + 76}px`}"><b><span class="num">0${k + 1}</span> ${t}</b><span>${d}</span></div>`; }).join("")}
   <div class="abs deeper num" style="left:${LCX - LR - 150}px;top:${LCY - LR + 20}px">더 깊이 ↺</div>
+  <div class="abs lveil" style="inset:0;background:#000;opacity:0"></div><div class="abs redf" style="inset:0;opacity:0"></div>
+  ${LOOPN.map(([, t], k) => `<div class="abs lslam" style="left:0;right:0;top:${k === 3 ? 400 : 390}px;text-align:center;opacity:0"><span class="lno num">0${k + 1}</span>${rgb(t, k === 3 ? "red" : "")}</div>`).join("")}
 `,
   build(s, tl) {
     rise(tl, [$(".kick", s), $(".h1", s), $(".content .body", s)], 0.2);
-    tl.from($(".lmid", s), { scale: 0.7, opacity: 0, duration: 0.7, ease: "back.out(2)" }, 0.5);
-    const arcs = $$(".arc", s), nodes = $$(".lnode", s), texts = $$(".ltext", s);
+    const arcs = $$(".arc", s), nodes = $$(".lnode", s), texts = $$(".ltext", s), SL = $$(".lslam", s), lv = $(".lveil", s);
     arcs.forEach((a) => { const L = a.getTotalLength(); a.style.strokeDasharray = L; a.style.strokeDashoffset = L; });
-    nodes.forEach((n, k) => { const at = 0.8 + k * 0.7;
-      tl.from(n, { scale: 0, duration: 0.4, ease: "back.out(3)" }, at).from(texts[k], { opacity: 0, y: 14, duration: 0.5 }, at + 0.1)
-        .to(arcs[k], { strokeDashoffset: 0, duration: 0.55, ease: "power2.inOut" }, at + 0.25);
-      call(tl, () => sfx("tick", 0.6), at); });
-    tl.from($(".deeper", s), { opacity: 0, x: 20, duration: 0.5 }, 0.8 + 3 * 0.7 + 0.6);
-    call(tl, () => sfx("ping", 0.7), 0.8 + 3 * 0.7 + 0.6);
+    tl.to(lv, { opacity: 0.78, duration: 0.25 }, 0.5);
+    const B = 0.95; // one step per beat-pair: slam, hold, then fly into the ring
+    nodes.forEach((n, k) => { const at = 0.6 + k * B, w = SL[k], [x, y] = lpos(k), big = k === 3;
+      tl.fromTo(w, { opacity: 0, scale: 2.6, filter: "blur(18px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.in" }, at)
+        .to(w, { scale: 1.06, duration: 0.42, ease: "none" }, at + 0.16)
+        .to(w, { x: x - 960, y: y - 540, scale: 0.08, opacity: 0, duration: 0.3, ease: "power3.in" }, at + 0.58)
+        .from(n, { scale: 0, duration: 0.35, ease: "back.out(3)" }, at + 0.82)
+        .from(texts[k], { opacity: 0, y: 14, duration: 0.4 }, at + 0.86)
+        .to(arcs[k], { strokeDashoffset: 0, duration: 0.5, ease: "power2.inOut" }, at + 0.9);
+      split(tl, $(".rgb", w), at + 0.16, big ? 34 : 22); shake(tl, w, at + 0.16, big ? 40 : 20, big ? 0.4 : 0.3);
+      flash(tl, at + 0.16, big ? 0.9 : 0.4);
+      call(tl, () => { if (big) { boom(1); sfx("alarm", 0.5); } else { boom(0.35); sfx("ping", 0.5); } }, at + 0.16);
+      if (big) { tl.fromTo($(".redf", s), { opacity: 0.85 }, { opacity: 0, duration: 0.9, ease: "power2.out", immediateRender: false }, at + 0.16); shake(tl, s, at + 0.16, 26, 0.5); }
+    });
+    const end = 0.6 + 4 * B;
+    tl.to(lv, { opacity: 0, duration: 0.5 }, end - 0.2)
+      .from($(".lmid", s), { scale: 0.7, opacity: 0, duration: 0.7, ease: "back.out(2)" }, end - 0.1)
+      .from($(".deeper", s), { opacity: 0, x: 20, duration: 0.5 }, end + 0.3);
+    call(tl, () => sfx("ping", 0.7), end + 0.3);
     // a light runs the loop forever
     const dot = $(".ldot", s), D = { a: 0 }, place = () => { const a = D.a * Math.PI / 180; dot.style.left = LCX + LR * Math.sin(a) - 9 + "px"; dot.style.top = LCY - LR * Math.cos(a) - 9 + "px"; };
-    place(); tl.from(dot, { opacity: 0, duration: 0.4 }, 3.6);
-    loop(3.6, () => gsap.to(D, { a: 360, duration: 6, ease: "none", repeat: -1, onUpdate: place }));
+    place(); tl.from(dot, { opacity: 0, duration: 0.4 }, end + 0.4);
+    loop(end + 0.4, () => gsap.to(D, { a: 360, duration: 6, ease: "none", repeat: -1, onUpdate: place }));
   } });
 
 // 04 ── 02 core ①: submarine management (click → PRESSURE, click → LOW FUEL); the big gauges stand in for the HUD here
@@ -379,13 +393,18 @@ S.push({ depth: 1000, html: () => `
     flash(tl, t + D, 0.25);
   } });
 
-// 06b ── world map: a cross-section of the trench, the route drawn in, each site lit like a sonar contact
-const MY = (d) => [[0, 150], [200, 262], [1000, 392], [4000, 560], [6000, 720], [10900, 930]].reduce((acc, [dd, y], i, a) => (d >= dd && i < a.length - 1 && d <= a[i + 1][0] ? y + (a[i + 1][1] - y) * (d - dd) / (a[i + 1][0] - dd) : acc), 930);
+// 06b ── world map: the camera dives the trench site by site (each one flashes its art), meets the eyes at the bottom, then pulls back to the whole map
+const MYK = [[0, 150], [200, 262], [1000, 392], [4000, 560], [6000, 720], [10900, 930]];
+const MY = (d) => MYK.reduce((acc, [dd, y], i, a) => (d >= dd && i < a.length - 1 && d <= a[i + 1][0] ? y + (a[i + 1][1] - y) * (d - dd) / (a[i + 1][0] - dd) : acc), 930);
+const DY = (y) => { for (let i = 0; i < MYK.length - 1; i++) { const [d0, y0] = MYK[i], [d1, y1] = MYK[i + 1]; if (y <= y1) return d0 + (d1 - d0) * (y - y0) / (y1 - y0); } return 10900; };
 const SITES = [[1060, 228, "정비 정거장", "sub", "st"], [1395, 330, "가라앉은 군함", "wreck", ""], [1040, 470, "고대 유적", "ruins", ""], [1405, 520, "인간형 크리쳐 서식지", "humanoid", "boss"],
   [1070, 650, "희귀 광맥", "", "res"], [1390, 700, "층의 주인 둥지", "boss", "boss"], [1220, 872, "크리쳐 문명의 중심", "specimen", ""]];
 const ROUTE = [[1220, 120], [1080, 228], [1380, 330], [1060, 470], [1390, 520], [1080, 650], [1370, 700], [1220, 872]];
+const SITE_TXT = ["보급 · 수리 · 제작", "폐품과 옛 장비", "알 수 없는 문자의 기둥", "어둠 속에서 사람을 닮은 것들이 움직인다", "광석 · 발광 샘플", "층의 주인이 잠든 곳", "모든 것의 시작"];
+const MK = 2.0, camAt = (x, y, k = MK, sx = 440) => ({ x: sx - k * x, y: 540 - k * y, scale: k });
 S.push({ depth: 1000, html: () => `
   <div class="abs" style="inset:0;background:linear-gradient(180deg,#0b4250 0,#062430 14%,#03141b 34%,#010a0e 60%,#000 86%)"></div>
+  <div class="abs world" style="left:0;top:0;width:1920px;height:1080px;transform-origin:0 0">
   <svg class="abs" style="left:0;top:0" width="1920" height="1080">
     <path d="M700 120 L960 120 L930 300 L980 420 L900 560 L960 700 L1060 860 L1140 930 L1300 930 L1380 860 L1480 700 L1540 560 L1460 420 L1510 300 L1480 120 L1760 120 L1760 1000 L700 1000 Z" fill="#0c1b21" stroke="rgba(95,227,211,.35)" stroke-width="2"/>
     ${[200, 1000, 4000, 6000].map((d) => `<line x1="700" x2="1760" y1="${MY(d)}" y2="${MY(d)}" stroke="rgba(160,200,210,.12)" stroke-dasharray="6 10"/>`).join("")}
@@ -395,17 +414,42 @@ S.push({ depth: 1000, html: () => `
   ${[[0, "0 m"], [200, "200"], [1000, "1,000"], [4000, "4,000"], [6000, "6,000"], [10900, "10,900"]].map(([d, t]) => `<div class="abs num" style="left:640px;top:${MY(d) - 12}px;width:50px;text-align:right;font-size:16px;color:var(--dim)">${t}</div>`).join("")}
   ${SITES.map(([x, y, n, im, k]) => `<div class="site ${k}" style="left:${x}px;top:${y}px">${im ? `<i style="background-image:url(img/${im}.jpg)"></i>` : `<i class="ore">${ico("ore")}</i>`}<span>${n}</span></div>`).join("")}
   <div class="abs num qq" style="left:1192px;top:958px;font-size:30px;font-weight:800;color:var(--red)">???</div>
-  <div class="content" style="width:480px">${kick("02 — 3", "월드맵")}<div class="h1" style="margin:12px 0 30px">해구<br>단면도</div>
+  </div>
+  ${SITES.map(([, y, n, im, k], i) => `<div class="pc ${k}"><i style="${im ? `background-image:url(img/${im}.jpg)` : "background:radial-gradient(circle at 50% 60%,#5FE3D3 0,#0b3a40 30%,#020a0d 75%)"}"></i>
+    <div class="pcl"><small class="num">DEPTH ${fmt(Math.round(DY(y) / 50) * 50)} M${k === "boss" ? " &nbsp;·&nbsp; <em>DANGER</em>" : ""}</small><b>${n}</b><span>${SITE_TXT[i]}</span></div></div>`).join("")}
+  <div class="abs scare" style="inset:0;background:#000;opacity:0"><div class="abs eyesbig" style="left:50%;top:50%;width:1500px;height:500px;margin:-250px 0 0 -750px;background:url(img/eyes.png) center/contain no-repeat"></div>
+    <div class="abs disp" style="left:0;right:0;top:800px;text-align:center;font-size:64px;color:var(--red)">바닥 아래, 무언가가 있다</div></div>
+  <div class="content mapc" style="width:480px">${kick("02 — 3", "월드맵")}<div class="h1" style="margin:12px 0 30px">해구<br>단면도</div>
     <div class="legend"><div><b class="amber">- - -</b> 잠수정 경로</div><div><i class="lg st"></i> 정비 정거장</div><div><i class="lg boss"></i> 보스 · 위험 지역</div><div><i class="lg res"></i> 자원</div><div><b class="red">???</b> 바닥 아래</div></div></div>`,
   build(s, tl) {
-    rise(tl, [$(".kick", s), $(".h1", s), ...$$(".legend > div", s)], 0.2, { s: 0.08 });
-    const route = $(".route", s), L = route.getTotalLength();
-    tl.fromTo(route, { strokeDashoffset: L, strokeDasharray: `${L} ${L}` }, { strokeDashoffset: 0, duration: 4.2, ease: "power1.inOut" }, 0.6)
-      .set(route, { strokeDasharray: "10 8" }, 4.85);
-    $$(".site", s).forEach((st, i) => { const at = 0.9 + i * 0.55;
-      tl.from(st, { scale: 0, opacity: 0, duration: 0.4, ease: "back.out(2.5)" }, at); call(tl, () => (st.classList.contains("boss") ? (sfx("ping", 0.6), boom(0.3)) : sfx("tick", 0.6)), at); });
-    tl.from($(".shadow", s), { opacity: 0, scaleX: 0.4, transformOrigin: "50% 50%", duration: 1.2, ease: "power2.out" }, 5.0).from($(".qq", s), { opacity: 0, duration: 0.6 }, 5.6);
-    call(tl, () => { sonar(0.12); boom(0.7); }, 5.0); shake(tl, $(".shadow", s), 5.2, 10, 0.6);
+    const W = $(".world", s), route = $(".route", s), L = route.getTotalLength(), cards = $$(".pc", s), sites = $$(".site", s), G = 1.15;
+    tl.set(W, camAt(1220, 150, 2.6, 960), 0).set($(".mapc", s), { opacity: 0 }, 0);
+    tl.fromTo(route, { strokeDashoffset: L, strokeDasharray: `${L} ${L}` }, { strokeDashoffset: 0, duration: 0.4 + SITES.length * G, ease: "none" }, 0.3);
+    call(tl, () => { whoosh(1.6, 0.4); sfx("bubbles", 0.4); }, 0.2);
+    SITES.forEach(([x, y, , , k], i) => { const at = 0.3 + i * G, c = cards[i], boss = k === "boss";
+      tl.to(W, { ...camAt(x, y), duration: 0.6, ease: "power2.inOut" }, at)
+        .from(sites[i], { scale: 0, opacity: 0, duration: 0.35, ease: "back.out(2.5)" }, at + 0.45)
+        .fromTo(c, { opacity: 0, x: 140, scale: 1.12 }, { opacity: 1, x: 0, scale: 1, duration: 0.22, ease: "power4.out" }, at + 0.5)
+        .to(c, { opacity: 0, x: -80, duration: 0.2, ease: "power2.in" }, at + G - 0.05);
+      call(tl, () => (boss ? (sfx("alarm", 0.4), boom(0.8)) : sfx("ping", 0.5)), at + 0.5);
+      if (boss) { flash(tl, at + 0.5, 0.6); shake(tl, c, at + 0.52, 22, 0.4); shake(tl, s, at + 0.52, 12, 0.4); }
+    });
+    // the bottom: camera sinks onto the shadow, the sonar goes quiet, then the eyes open
+    const B = 0.3 + SITES.length * G;
+    tl.to(W, { ...camAt(1220, 975, 3, 960), duration: 1.1, ease: "power2.inOut" }, B)
+      .from($(".shadow", s), { opacity: 0, scaleX: 0.4, transformOrigin: "50% 50%", duration: 1.0, ease: "power2.out" }, B + 0.2).from($(".qq", s), { opacity: 0, duration: 0.4 }, B + 0.8);
+    call(tl, () => sonar(0.14), B + 0.3);
+    const J = B + 1.6, sc = $(".scare", s);
+    tl.set(sc, { opacity: 1 }, J).fromTo($(".eyesbig", s), { scale: 0.7, opacity: 0 }, { scale: 1.25, opacity: 1, duration: 1.1, ease: "power2.out" }, J)
+      .from($(".scare .disp", s), { opacity: 0, y: 30, duration: 0.4 }, J + 0.35)
+      .to(sc, { opacity: 0, duration: 0.5, ease: "power2.in" }, J + 1.6);
+    call(tl, () => { boom(1); thunder(0.6); sfx("alarm", 0.6); }, J);
+    flash(tl, J, 1, 0.5); shake(tl, $(".eyesbig", s), J, 40, 0.6);
+    // pull back to the full map
+    tl.to(W, { x: 0, y: 0, scale: 1, duration: 1.5, ease: "expo.inOut" }, J + 1.7)
+      .to($(".mapc", s), { opacity: 1, duration: 0.01 }, J + 2.6);
+    rise(tl, [$(".mapc .kick", s), $(".mapc .h1", s), ...$$(".legend > div", s)], J + 2.6, { s: 0.08 });
+    tl.set(route, { strokeDasharray: "10 8" }, J + 2.6);
   } });
 
 // 06 ── 02 core ③: photographs (flashlight hunt → lock → shutter → the shot flies into the codex)
@@ -570,47 +614,116 @@ S.push({ depth: 3200, html: () => `
     });
   } });
 
-// 13b ── what the four of you actually do in a hunt (proposal, team to confirm)
-const ROLES = [["helm", "조타수", "PILOT", "잠수정 조종 · 라이트로 유인"], ["cam", "촬영수", "SPOTTER", "약점을 찍어 모두에게 표시"], ["harpoon", "사수", "GUNNER", "작살로 약점 집중 공격"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란"]];
+// 13b ── what the four of you actually do in a hunt (proposal, team to confirm): a character-select screen, each diver slams in and locks READY
+const RC4 = { P: "#5FE3D3", S: "#FFB547", G: "#FF4B3E", E: "#EAF2F4" };
+// [icon, name, en, line, role colour key, crew.jpg crop at 1300px wide]
+const ROLES = [["helm", "조타수", "PILOT", "잠수정 조종 · 라이트로 유인", "P", "-18px -250px"], ["cam", "촬영수", "SPOTTER", "약점을 찍어 모두에게 표시", "S", "-174px -177px"],
+  ["harpoon", "사수", "GUNNER", "작살로 약점 집중 공격", "G", "-317px -177px"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란", "E", "-694px -309px"]];
 S.push({ depth: 3200, html: () => `
-  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.8"></div>
-  <div class="content" style="width:1600px">${kick("04 — 2", "협동 사냥 · 제안")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
-  ${ROLES.map(([ic, n, en, d], i) => `<div class="role" style="left:${120 + i * 410}px;top:300px">${ico(ic)}<div class="rn"><small>${en}</small>${n}</div><div class="rd">${d}</div></div>`).join("")}
-  <div class="hunt">${["유인", "약점 촬영", "집중 공격", "수리 · 교란", "샘플 회수"].map((t) => `<div>${t}</div>`).join("<i>→</i>")}</div>
-  <div class="vs"><div><b>서브노티카</b>는 혼자 하는 탐험 → <b>우리</b>는 4명이 하는 사냥</div><div><b>리썰 컴퍼니</b>는 파밍과 도망 → <b>우리</b>는 거대 크리쳐와 협동 전투</div></div>`,
+  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.82"></div>
+  <div class="content" style="width:1600px;top:110px">${kick("04 — 2", "협동 사냥 · 제안")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
+  ${ROLES.map(([ic, n, en, d, r, bp], i) => `<div class="role sel" style="left:${120 + i * 410}px;top:260px;--rc:${RC4[r]}"><div class="rp" style="background-position:${bp}"></div><div class="rnum num">P${i + 1}</div>
+    <div class="rb2">${ico(ic)}<div class="rn"><small>${en}</small>${rgb(n)}</div><div class="rd">${d}</div></div><div class="rdy num">READY</div></div>`).join("")}
+  <div class="abs allready num" style="left:0;right:0;top:668px;text-align:center;font-size:30px;font-weight:800;letter-spacing:.5em;color:var(--teal);opacity:0">4 / 4 READY</div>
+  <div class="hunt" style="top:720px">${["유인", "약점 촬영", "집중 공격", "수리 · 교란", "샘플 회수"].map((t) => `<div>${t}</div>`).join("<i>→</i>")}</div>
+  <div class="vs" style="top:836px"><div><b>서브노티카</b>는 혼자 하는 탐험 → <b>우리</b>는 4명이 하는 사냥</div><div><b>리썰 컴퍼니</b>는 파밍과 도망 → <b>우리</b>는 거대 크리쳐와 협동 전투</div></div>`,
   build(s, tl) {
     tl.from($(".bg", s), { opacity: 0, scale: 1.15, duration: 1.6, ease: "power2.out" }, 0);
     rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
-    $$(".role", s).forEach((r, i) => { tl.from(r, { y: 80, opacity: 0, duration: 0.6, ease: "expo.out" }, 0.6 + i * 0.25); call(tl, () => sfx("tick", 0.6), 0.6 + i * 0.25); });
-    $$(".hunt > div", s).forEach((h, i) => tl.to(h, { color: i === 2 ? "#FF4B3E" : "#EAF2F4", borderBottomColor: i === 2 ? "#FF4B3E" : "#5FE3D3", duration: 0.25 }, 1.9 + i * 0.4));
-    rise(tl, $$(".vs > div", s), 4.0, { s: 0.2 });
+    $$(".role", s).forEach((r, i) => { const at = 0.6 + i * 0.5;
+      tl.fromTo(r, { opacity: 0, scale: 1.5, filter: "blur(14px) brightness(2.5)" }, { opacity: 1, scale: 1, filter: "blur(0px) brightness(1)", duration: 0.18, ease: "power4.in" }, at)
+        .fromTo($(".rp", r), { backgroundSize: "1700px auto" }, { backgroundSize: "1300px auto", duration: 0.6, ease: "expo.out" }, at)
+        .fromTo($(".rdy", r), { opacity: 0, scale: 2.4, rotation: -20 }, { opacity: 1, scale: 1, rotation: -8, duration: 0.18, ease: "power4.in" }, at + 0.3);
+      split(tl, $(".rgb", r), at + 0.18, 18); shake(tl, r, at + 0.18, 14, 0.3); flash(tl, at + 0.18, 0.35, 0.2);
+      call(tl, () => { sfx("ping", 0.55); boom(0.3); }, at + 0.18); call(tl, () => sfx("tick", 0.7), at + 0.48); });
+    const R = 0.6 + 4 * 0.5;
+    tl.fromTo($(".allready", s), { opacity: 0, scale: 1.4 }, { opacity: 1, scale: 1, duration: 0.25, ease: "power4.in" }, R);
+    flash(tl, R + 0.25, 0.6); call(tl, () => boom(0.8), R + 0.25);
+    $$(".hunt > div", s).forEach((h, i) => tl.to(h, { color: i === 2 ? "#FF4B3E" : "#EAF2F4", borderBottomColor: i === 2 ? "#FF4B3E" : "#5FE3D3", duration: 0.25 }, R + 0.7 + i * 0.3));
+    rise(tl, $$(".vs > div", s), R + 2.3, { s: 0.2 });
   } });
 
-// 14b ── how a hunt plays out with four people: a four-panel storyboard (proposal, team to confirm)
-const RC4 = { P: "#5FE3D3", S: "#FFB547", G: "#FF4B3E", E: "#EAF2F4" };
-const diverDot = (x, y, r) => `<g><circle cx="${x}" cy="${y}" r="13" fill="${RC4[r]}"/><text x="${x}" y="${y + 5}" text-anchor="middle" font-size="14" font-weight="800" fill="#031014">${r}</text></g>`;
-const beast = '<path d="M210 70 C 300 40, 360 110, 330 170 C 300 230, 200 220, 170 170 C 140 120, 160 85, 210 70 Z" fill="#0b1a20" stroke="#2b3f47" stroke-width="2"/><path d="M175 165 L120 205 L150 160 Z" fill="#0b1a20"/><circle cx="290" cy="110" r="9" fill="#FF4B3E"/>';
-const PANELS = [
-  ["유인", "조타수(P)가 라이트로 크리쳐를 동굴 밖으로 끌어낸다", `<path d="M40 230 L230 120 L250 150 Z" fill="rgba(95,227,211,.25)"/>${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
-  ["약점 표시", "촬영수(S)가 찍으면 약점이 모두의 화면에 표시된다", `<circle cx="250" cy="175" r="18" fill="none" stroke="#FFB547" stroke-width="3" class="mk"/><path d="M232 175h36M250 157v36" stroke="#FFB547" stroke-width="2"/><circle cx="80" cy="60" r="34" fill="rgba(255,255,255,.35)" class="fl"/>${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
-  ["집중 공격", "사수(G)와 동료들이 표시된 약점에 작살을 모은다", `<circle cx="250" cy="175" r="18" fill="none" stroke="#FFB547" stroke-width="3"/>${[[60, 150], [80, 60], [40, 230]].map(([x, y]) => `<line x1="${x}" y1="${y}" x2="248" y2="174" stroke="#FF4B3E" stroke-width="3" class="hp" pathLength="1" stroke-dasharray="1"/>`).join("")}${diverDot(40, 230, "P")}${diverDot(80, 60, "S")}${diverDot(60, 150, "G")}${diverDot(30, 110, "E")}`],
-  ["위기 대응", "반격에 선체가 깨지면 정비공(E)이 수리, 미끼로 시선을 돌린다", `<path d="M20 250 h90 v-34 h-90 z" fill="#2a3a40" stroke="#5FE3D3"/><path d="M70 216 l8 12 -10 6 8 12" stroke="#FF4B3E" stroke-width="3" fill="none"/><circle cx="160" cy="250" r="8" fill="#FFB547" class="bt"/>${diverDot(40, 230, "P")}${diverDot(110, 90, "S")}${diverDot(90, 160, "G")}${diverDot(70, 200, "E")}`],
-];
+// 14b ── how a hunt plays out with four people (proposal, team to confirm): four full-screen cuts, one per click, then they snap into a comic strip
+const CUTS = [
+  ["coop_lure", "유인", "P", "라이트로 크리쳐를 동굴 밖으로 끌어낸다", "82% 50%"],
+  ["coop_mark", "약점 표시", "S", "찍는 순간 약점이 4명 모두의 화면에 뜬다", "68% 50%"],
+  ["coop_strike", "집중 공격", "G", "표시된 약점 하나에 작살을 모은다", "50% 50%"],
+  ["coop_crisis", "위기 대응", "E", "선체가 깨지면 수리, 미끼로 시선을 돌린다", "45% 50%"]];
+const RN = { P: ["조타수", "PILOT"], S: ["촬영수", "SPOTTER"], G: ["사수", "GUNNER"], E: ["정비공", "ENGINEER"] };
+const RET = (cls, x, y, label) => `<div class="ret ${cls}" style="left:${x}%;top:${y}%"><svg viewBox="-60 -60 120 120"><circle r="44" fill="none" stroke="currentColor" stroke-width="4"/><circle r="56" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="10 8"/><path d="M-60 0h30M30 0h30M0 -60v30M0 30v30" stroke="currentColor" stroke-width="4"/></svg><b class="num">${label}</b></div>`;
+const CRACK = ["M480 290 L380 120 L330 40", "M480 290 L640 180 L760 150 L900 60", "M480 290 L700 360 L860 330", "M480 290 L560 520 L520 700", "M480 290 L300 400 L140 430", "M640 180 L620 90", "M700 360 L760 470"];
+const CFX = [
+  `<div class="lure" style="left:27%;top:30%"></div>${RET("con", 27, 30, "CONTACT")}`,
+  RET("wk", 73, 62, "WEAK POINT"),
+  `${RET("wk hit", 47, 33, "")}<div class="crit disp" style="left:47%;top:33%">CRITICAL</div>`,
+  `<div class="alarm"></div><svg class="crack" viewBox="0 0 1920 1080" preserveAspectRatio="none">${CRACK.map((d) => `<path d="${d}" pathLength="1" stroke-dasharray="1"/>`).join("")}</svg><div class="hullw num">HULL BREACH</div>`];
 const EXTRA = ["산소 나눠 쓰기", "쓰러진 대원 끌고 오기", "무거운 샘플 함께 운반", "가까이 있어야 들리는 음성 통신"];
 S.push({ depth: 3200, html: () => `
-  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.88"></div>
-  <div class="content" style="width:1600px">${kick("04 — 3", "협동 사냥 예시 · 제안")}<div class="h1" style="margin-top:12px">협동은 이렇게 한다</div></div>
-  ${PANELS.map(([t, d, art], i) => `<div class="panel4" style="left:${120 + i * 410}px;top:300px"><div class="pn"><b class="num">0${i + 1}</b> ${t}</div>
-    <div class="pwrap"><svg viewBox="0 0 380 280" width="380" height="280">${beast}${art}</svg><div class="pimg" style="background-image:url(img/${["coop_lure", "coop_mark", "coop_strike", "coop_crisis"][i]}.jpg);background-position:${["82% 50%", "68% 50%", "50% 50%", "45% 50%"][i]}"></div></div><div class="pd">${d}</div></div>`).join("")}
-  <div class="extra"><b>그 밖의 협동</b>${EXTRA.map((e) => `<i>${e}</i>`).join("")}</div>`,
+  <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.9"></div>
+  ${CUTS.map(([im, t, r, d, bp], i) => `<div class="cut" style="--rc:${RC4[r]}"><div class="cimg" style="background-image:url(img/${im}.jpg);background-position:${bp}"><div class="cfx">${CFX[i]}</div></div><div class="cshade"></div>
+    <div class="cbig"><div class="cno num">STEP 0${i + 1} <span>/ 04</span></div><div class="ct">${rgb(t)}</div><div class="crole"><b>${RN[r][0]}</b><small class="num">${RN[r][1]}</small></div><div class="cd">${d}</div></div>
+    <div class="cmini"><b><span class="num">0${i + 1}</span> ${t}</b><span>${RN[r][0]} · ${d}</span></div></div>`).join("")}
+  <div class="abs redf" style="inset:0;opacity:0"></div>
+  <div class="content coopc" style="width:1600px;top:110px">${kick("04 — 3", "협동 사냥 예시 · 제안")}<div class="h1" style="margin-top:12px">협동은 이렇게 한다</div></div>
+  <div class="extra" style="top:830px"><b>그 밖의 협동</b>${EXTRA.map((e) => `<i>${e}</i>`).join("")}</div>`,
   build(s, tl) {
-    tl.from($(".bg", s), { opacity: 0, duration: 1.2 }, 0); rise(tl, [$(".kick", s), $(".h1", s)], 0.2);
-    $$(".panel4", s).forEach((pnl, i) => { const at = 0.6 + i * 1.1;
-      tl.from(pnl, { y: 60, opacity: 0, duration: 0.6, ease: "expo.out" }, at); call(tl, () => sfx(i === 2 ? "rumble" : "tick", 0.6), at + 0.3);
-      if (i === 1) { tl.fromTo($(".fl", pnl), { opacity: 0 }, { keyframes: [{ opacity: 1, duration: 0.08 }, { opacity: 0, duration: 0.5 }] }, at + 0.5).from($(".mk", pnl), { scale: 2, opacity: 0, transformOrigin: "250px 175px", duration: 0.3 }, at + 0.6); call(tl, () => sfx("shutter", 0.6), at + 0.5); }
-      if (i === 2) tl.fromTo($$(".hp", pnl), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.35, stagger: 0.1 }, at + 0.5);
-      if (i === 3) { shake(tl, pnl, at + 0.4, 10, 0.4); tl.from($(".bt", pnl), { x: -80, duration: 0.6 }, at + 0.6); } });
-    rise(tl, [$(".extra b", s), ...$$(".extra i", s)], 5.2, { s: 0.1, y: 12 });
+    const cuts = $$(".cut", s);
+    tl.set([$(".coopc", s), $(".extra", s)], { opacity: 0 }, 0);
+    const enter = (i, T) => { const c = cuts[i], im = $(".cimg", c), ct = $(".ct", c);
+      tl.set(c, { opacity: 1 }, T)
+        .fromTo(im, { scale: 1.3, filter: "blur(16px) brightness(2.2)" }, { scale: 1.06, filter: "blur(0px) brightness(1)", duration: 0.5, ease: "expo.out" }, T)
+        .to(im, { scale: 1, duration: 2.6, ease: "none" }, T + 0.5)
+        .from($(".cno", c), { opacity: 0, x: -50, duration: 0.3, ease: "expo.out" }, T + 0.2)
+        .fromTo(ct, { opacity: 0, scale: 2.3, filter: "blur(16px)" }, { opacity: 1, scale: 1, filter: "blur(0px)", duration: 0.16, ease: "power4.in" }, T + 0.3)
+        .from($(".crole", c), { opacity: 0, x: -70, duration: 0.35, ease: "expo.out" }, T + 0.6)
+        .from($(".cd", c), { opacity: 0, y: 20, duration: 0.4 }, T + 0.75);
+      split(tl, $(".rgb", ct), T + 0.46, 26); shake(tl, ct, T + 0.46, 22, 0.3); flash(tl, T, 0.5, 0.25);
+      call(tl, () => { whoosh(0.8, 0.4); }, T); call(tl, () => boom(0.4), T + 0.46); };
+    // 01 lure: something moves in the cave, the sonar tags it
+    let T = 0.15; enter(0, T);
+    const c0 = cuts[0];
+    tl.fromTo($(".lure", c0), { opacity: 0, scale: 0.4 }, { opacity: 1, scale: 1, duration: 0.6, ease: "power2.out" }, T + 0.9)
+      .fromTo($(".ret", c0), { opacity: 0, scale: 2.5 }, { opacity: 1, scale: 1, duration: 0.3, ease: "back.out(2)" }, T + 1.0);
+    call(tl, () => { sonar(0.12); sfx("rumble", 0.6); }, T + 0.9);
+    tl.addPause();
+    // 02 mark: the shutter fires, the weak point locks on every screen
+    T = tl.duration() + 0.05; enter(1, T);
+    const c1 = cuts[1];
+    flash(tl, T + 1.0, 1, 0.35);
+    tl.fromTo($(".ret", c1), { opacity: 0, scale: 3, rotation: -120 }, { opacity: 1, scale: 1, rotation: 0, duration: 0.4, ease: "back.out(1.8)" }, T + 1.05);
+    call(tl, () => sfx("shutter", 0.8), T + 1.0); call(tl, () => sfx("ping", 0.8), T + 1.4);
+    tl.addPause();
+    // 03 strike: hit-stop, red flash, CRITICAL
+    T = tl.duration() + 0.05; enter(2, T);
+    const c2 = cuts[2], H = T + 1.0;
+    tl.fromTo($(".ret", c2), { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.25 }, T + 0.85)
+      .fromTo(c2, { scale: 1.12 }, { scale: 1, duration: 0.5, ease: "expo.out", immediateRender: false }, H + 0.12)
+      .fromTo($(".crit", c2), { opacity: 0, scale: 2.6 }, { opacity: 1, scale: 1, duration: 0.14, ease: "power4.in" }, H)
+      .fromTo($(".redf", s), { opacity: 0.8 }, { opacity: 0, duration: 0.7, ease: "power2.out", immediateRender: false }, H);
+    flash(tl, H, 1, 0.3); shake(tl, $(".cimg", c2), H + 0.12, 40, 0.5);
+    call(tl, () => { boom(1); thunder(0.5); }, H);
+    tl.addPause();
+    // 04 crisis: the window cracks, alarms, HULL BREACH
+    T = tl.duration() + 0.05; enter(3, T);
+    const c3 = cuts[3], K = T + 0.95;
+    tl.fromTo($$(".crack path", c3), { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 0.22, stagger: 0.04, ease: "power2.out" }, K)
+      .fromTo($(".alarm", c3), { opacity: 0 }, { opacity: 0.75, duration: 0.3, repeat: 5, yoyo: true, ease: "sine.inOut" }, K + 0.1)
+      .fromTo($(".hullw", c3), { opacity: 0, scale: 2 }, { opacity: 1, scale: 1, duration: 0.15, ease: "power4.in" }, K + 0.15);
+    shake(tl, $(".cimg", c3), K, 34, 0.5); flash(tl, K, 0.7, 0.25);
+    call(tl, () => { boom(0.9); sfx("alarm", 0.7); }, K);
+    tl.addPause();
+    // the four cuts rewind into a comic strip
+    const M = tl.duration() + 0.05;
+    tl.to($$(".cbig, .cfx, .cshade", s), { opacity: 0, duration: 0.25 }, M);
+    [3, 2, 1, 0].forEach((i, j) => { const at = M + 0.15 + j * 0.2;
+      tl.to(cuts[i], { left: 120 + i * 415, top: 290, width: 395, height: 500, rotation: [-1.5, 1, -1, 1.5][i], borderColor: RC4[CUTS[i][2]], duration: 0.55, ease: "expo.inOut" }, at);
+      call(tl, () => sfx("tick", 0.7), at + 0.5); });
+    const E = M + 0.15 + 3 * 0.2 + 0.55;
+    tl.fromTo($$(".cmini", s), { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.4, stagger: 0.08 }, E)
+      .set([$(".coopc", s), $(".extra", s)], { opacity: 1 }, E);
+    flash(tl, E, 0.4); call(tl, () => boom(0.5), E);
+    rise(tl, [$(".coopc .kick", s), $(".coopc .h1", s)], E);
+    rise(tl, [$(".extra b", s), ...$$(".extra i", s)], E + 0.4, { s: 0.1, y: 12 });
   } });
 
 // 12–16 ── 05 progress, with a five-step tracker on top
