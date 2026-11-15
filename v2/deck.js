@@ -326,8 +326,8 @@ const gaugeRow = (i, en, kr, d, c) => `<div class="g g${i}" style="margin-top:${
 S.push({ depth: 1000, noRes: true, html: () => `
   <div class="bg" style="background-image:url(img/crew.jpg)"></div><div class="veil" style="opacity:.25"></div><div class="shadeL"></div><div class="wmk">02</div>
   <div class="content">${kick("02 — 1", "핵심 특징")}<div class="h1" style="margin:12px 0 26px">잠수정 관리</div>
-    <div class="body" style="margin-bottom:46px"><b style="color:var(--ink)">아래로만</b> 가는 잠수정. 선체나 연료가 바닥나면 끝.</div>
-    ${gaugeRow(0, "HULL", "선체", "수압이 깎는다", "var(--teal)")}${gaugeRow(1, "FUEL", "연료", "이동할수록 준다", "var(--amber)")}
+    <div class="body" style="margin-bottom:46px">엘리베이터처럼 <b style="color:var(--ink)">아래로만</b> 가는 잠수정.<br>선체나 연료가 바닥나면 게임 오버.</div>
+    ${gaugeRow(0, "HULL", "선체", "수압이 깎는다", "var(--teal)")}${gaugeRow(1, "FUEL", "연료", "내려갈수록 준다", "var(--amber)")}
     <div class="flow mg" style="margin-top:44px"><b>폐품 · 물자</b> <span class="teal">→</span> <b>부품 생산</b> <span class="teal">→</span> <b>무기 획득</b> <span class="teal">→</span> <b class="amber">잠수정 강화</b></div></div>
   <div class="abs w1" style="left:1080px;top:380px"><div class="warn">${rgb("PRESSURE")}</div></div>
   <div class="abs w2" style="left:1080px;top:560px"><div class="warn">${rgb("LOW FUEL")}</div></div>
@@ -397,10 +397,10 @@ S.push({ depth: 1000, html: () => `
 const MYK = [[0, 150], [200, 262], [1000, 392], [4000, 560], [6000, 720], [10900, 930]];
 const MY = (d) => MYK.reduce((acc, [dd, y], i, a) => (d >= dd && i < a.length - 1 && d <= a[i + 1][0] ? y + (a[i + 1][1] - y) * (d - dd) / (a[i + 1][0] - dd) : acc), 930);
 const DY = (y) => { for (let i = 0; i < MYK.length - 1; i++) { const [d0, y0] = MYK[i], [d1, y1] = MYK[i + 1]; if (y <= y1) return d0 + (d1 - d0) * (y - y0) / (y1 - y0); } return 10900; };
-const SITES = [[1060, 228, "정비 정거장", "sub", "st"], [1395, 330, "가라앉은 군함", "wreck", ""], [1040, 470, "고대 유적", "ruins", ""], [1405, 520, "인간형 크리쳐 서식지", "humanoid", "boss"],
+const SITES = [[1060, 228, "출발 기지", "sub", "st"], [1395, 330, "가라앉은 군함", "wreck", ""], [1040, 470, "고대 유적", "ruins", ""], [1405, 520, "인간형 크리쳐 서식지", "humanoid", "boss"],
   [1070, 650, "희귀 광맥", "", "res"], [1390, 700, "층의 주인 둥지", "boss", "boss"], [1220, 872, "크리쳐 문명의 중심", "specimen", ""]];
 const ROUTE = [[1220, 120], [1080, 228], [1380, 330], [1060, 470], [1390, 520], [1080, 650], [1370, 700], [1220, 872]];
-const SITE_TXT = ["보급 · 수리 · 제작", "폐품과 옛 장비", "알 수 없는 문자의 기둥", "어둠 속에서 사람을 닮은 것들이 움직인다", "광석 · 발광 샘플", "층의 주인이 잠든 곳", "모든 것의 시작"];
+const SITE_TXT = ["여기서부터는 아래로만", "폐품과 옛 장비", "알 수 없는 문자의 기둥", "어둠 속에서 사람을 닮은 것들이 움직인다", "광석 · 발광 샘플", "층의 주인이 잠든 곳", "모든 것의 시작"];
 const MK = 2.0, camAt = (x, y, k = MK, sx = 440) => ({ x: sx - k * x, y: 540 - k * y, scale: k });
 S.push({ depth: 1000, html: () => `
   <div class="abs" style="inset:0;background:linear-gradient(180deg,#0b4250 0,#062430 14%,#03141b 34%,#010a0e 60%,#000 86%)"></div>
@@ -424,7 +424,7 @@ S.push({ depth: 1000, html: () => `
     <div class="disp mth" style="font-size:190px;color:var(--ink)">${rgb("해구 단면도")}</div>
     <div class="num mts" style="font-size:30px;letter-spacing:.3em;color:var(--dim);margin-top:34px">0 m &nbsp;→&nbsp; 10,900 m</div></div>
   <div class="content mapc" style="width:480px">${kick("02 — 3", "월드맵")}<div class="h1" style="margin:12px 0 30px">해구<br>단면도</div>
-    <div class="legend"><div><b class="amber">- - -</b> 잠수정 경로</div><div><i class="lg st"></i> 정비 정거장</div><div><i class="lg boss"></i> 보스 · 위험 지역</div><div><i class="lg res"></i> 자원</div><div><b class="red">???</b> 바닥 아래</div></div></div>`,
+    <div class="legend"><div><b class="amber">- - -</b> 잠수정 경로</div><div><i class="lg st"></i> 출발 기지</div><div><i class="lg boss"></i> 보스 · 위험 지역</div><div><i class="lg res"></i> 자원</div><div><b class="red">???</b> 바닥 아래</div></div></div>`,
   build(s, tl) {
     const W = $(".world", s), route = $(".route", s), L = route.getTotalLength(), cards = $$(".pc", s), sites = $$(".site", s), G = 1.15;
     // title card first: the whole trench sits dim behind it, then the camera dives to the top
@@ -804,7 +804,7 @@ S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
   <div class="bg" style="background-image:url(img/specimen.jpg)"></div><div class="veil" style="opacity:.45"></div><div class="shadeL"></div>${steps(2)}
   <div class="content" style="width:820px">${kick("05 — 3 / 5", "게임 진행")}<div class="h2" style="margin:12px 0 44px">잠수정 정비와<br>무기 제작</div>
     <div class="chain"><div class="ln" style="top:48px;height:${96 * 4}px"><i></i></div>${RC.map((t) => `<div><span class="dot"></span>${t}</div>`).join("")}</div>
-    <div class="body pr" style="margin-top:26px;font-size:26px">샘플로 무기를, 폐품으로 선체를.</div></div>
+    <div class="body pr" style="margin-top:26px;font-size:26px">모든 제작은 잠수정 안에서.<br>샘플로 무기를, 폐품으로 선체를.</div></div>
   <div class="gpanel bench" style="left:940px;top:230px;width:800px;height:650px">${mock()}<div class="gh">WORKBENCH <em>잠수정 제작대</em></div>
     <div class="inv">${INV.map(([k, n, q]) => `<div class="slot${k ? "" : " empty"}">${k ? ico(k) + `<span class="q">×${q}</span><span class="nm">${n}</span>` : ""}</div>`).join("")}</div>
     <div class="scan"><div class="ghost">${ico("vial")}</div><div class="bm"></div><div class="pct">SCAN <span class="v">0</span>%</div></div>
