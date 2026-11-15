@@ -419,14 +419,27 @@ S.push({ depth: 1000, html: () => `
     <div class="pcl"><small class="num">DEPTH ${fmt(Math.round(DY(y) / 50) * 50)} M${k === "boss" ? " &nbsp;·&nbsp; <em>DANGER</em>" : ""}</small><b>${n}</b><span>${SITE_TXT[i]}</span></div></div>`).join("")}
   <div class="abs scare" style="inset:0;background:#000;opacity:0"><div class="abs eyesbig" style="left:50%;top:50%;width:1500px;height:500px;margin:-250px 0 0 -750px;background:url(img/eyes.png) center/contain no-repeat"></div>
     <div class="abs disp" style="left:0;right:0;top:800px;text-align:center;font-size:64px;color:var(--red)">바닥 아래, 무언가가 있다</div></div>
+  <div class="abs mtitle" style="inset:0;background:radial-gradient(ellipse at 50% 50%,rgba(1,10,14,.55),rgba(0,0,0,.92));display:flex;flex-direction:column;align-items:center;justify-content:center">
+    <div class="num mtk" style="font-size:24px;letter-spacing:.6em;color:var(--teal);margin-bottom:26px">02 — 3 &nbsp;WORLD MAP</div>
+    <div class="disp mth" style="font-size:190px;color:var(--ink)">${rgb("해구 단면도")}</div>
+    <div class="num mts" style="font-size:30px;letter-spacing:.3em;color:var(--dim);margin-top:34px">0 m &nbsp;→&nbsp; 10,900 m</div></div>
   <div class="content mapc" style="width:480px">${kick("02 — 3", "월드맵")}<div class="h1" style="margin:12px 0 30px">해구<br>단면도</div>
     <div class="legend"><div><b class="amber">- - -</b> 잠수정 경로</div><div><i class="lg st"></i> 정비 정거장</div><div><i class="lg boss"></i> 보스 · 위험 지역</div><div><i class="lg res"></i> 자원</div><div><b class="red">???</b> 바닥 아래</div></div></div>`,
   build(s, tl) {
     const W = $(".world", s), route = $(".route", s), L = route.getTotalLength(), cards = $$(".pc", s), sites = $$(".site", s), G = 1.15;
-    tl.set(W, camAt(1220, 150, 2.6, 960), 0).set($(".mapc", s), { opacity: 0 }, 0);
-    tl.fromTo(route, { strokeDashoffset: L, strokeDasharray: `${L} ${L}` }, { strokeDashoffset: 0, duration: 0.4 + SITES.length * G, ease: "none" }, 0.3);
-    call(tl, () => { whoosh(1.6, 0.4); sfx("bubbles", 0.4); }, 0.2);
-    SITES.forEach(([x, y, , , k], i) => { const at = 0.3 + i * G, c = cards[i], boss = k === "boss";
+    // title card first: the whole trench sits dim behind it, then the camera dives to the top
+    const T = 1.9, mt = $(".mtitle", s);
+    tl.set(W, { x: 0, y: 0, scale: 1 }, 0).set($(".mapc", s), { opacity: 0 }, 0).set(route, { strokeDasharray: `${L} ${L}`, strokeDashoffset: L }, 0);
+    tl.from($(".mtk", s), { opacity: 0, letterSpacing: "1.4em", duration: 0.5, ease: "power3.out" }, 0.1)
+      .from($(".mth", s), { opacity: 0, scale: 1.6, duration: 0.35, ease: "power4.out" }, 0.25)
+      .from($(".mts", s), { opacity: 0, y: 20, duration: 0.4 }, 0.6)
+      .to(mt, { opacity: 0, duration: 0.45, ease: "power2.in" }, T - 0.55)
+      .to(W, { ...camAt(1220, 150, 2.6, 960), duration: 0.8, ease: "power2.inOut" }, T - 0.6);
+    call(tl, () => { boom(0.5); sonar(0.2); }, 0.25);
+    flash(tl, 0.25, 0.6, 0.4); shake(tl, $(".mth", s), 0.27, 14, 0.3);
+    tl.fromTo(route, { strokeDashoffset: L, strokeDasharray: `${L} ${L}` }, { strokeDashoffset: 0, duration: 0.4 + SITES.length * G, ease: "none" }, T + 0.3);
+    call(tl, () => { whoosh(1.6, 0.4); sfx("bubbles", 0.4); }, T + 0.2);
+    SITES.forEach(([x, y, , , k], i) => { const at = T + 0.3 + i * G, c = cards[i], boss = k === "boss";
       tl.to(W, { ...camAt(x, y), duration: 0.6, ease: "power2.inOut" }, at)
         .from(sites[i], { scale: 0, opacity: 0, duration: 0.35, ease: "back.out(2.5)" }, at + 0.45)
         .fromTo(c, { opacity: 0, x: 140, scale: 1.12 }, { opacity: 1, x: 0, scale: 1, duration: 0.22, ease: "power4.out" }, at + 0.5)
@@ -435,7 +448,7 @@ S.push({ depth: 1000, html: () => `
       if (boss) { flash(tl, at + 0.5, 0.6); shake(tl, c, at + 0.52, 22, 0.4); shake(tl, s, at + 0.52, 12, 0.4); }
     });
     // the bottom: camera sinks onto the shadow, the sonar goes quiet, then the eyes open
-    const B = 0.3 + SITES.length * G;
+    const B = T + 0.3 + SITES.length * G;
     tl.to(W, { ...camAt(1220, 975, 3, 960), duration: 1.1, ease: "power2.inOut" }, B)
       .from($(".shadow", s), { opacity: 0, scaleX: 0.4, transformOrigin: "50% 50%", duration: 1.0, ease: "power2.out" }, B + 0.2).from($(".qq", s), { opacity: 0, duration: 0.4 }, B + 0.8);
     call(tl, () => sonar(0.14), B + 0.3);
