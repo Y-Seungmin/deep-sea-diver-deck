@@ -634,7 +634,7 @@ const ROLES = [["helm", "유인러", "LURER", "라이트로 크리쳐를 유인"
   ["harpoon", "사수", "GUNNER", "무기로 약점 집중 공격", "G", "-317px -177px"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란", "E", "-694px -309px"]];
 S.push({ depth: 3200, html: () => `
   <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.82"></div>
-  <div class="content" style="width:1600px;top:110px">${kick("04 — 2", "협동 사냥 · 제안")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
+  <div class="content" style="width:1600px;top:110px">${kick("04 — 2", "협동 사냥")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
   ${ROLES.map(([ic, n, en, d, r, bp], i) => `<div class="role sel" style="left:${120 + i * 410}px;top:260px;--rc:${RC4[r]}"><div class="rp" style="background-position:${bp}"></div><div class="rnum num">P${i + 1}</div>
     <div class="rb2">${ico(ic)}<div class="rn"><small>${en}</small>${rgb(n)}</div><div class="rd">${d}</div></div><div class="rdy num">READY</div></div>`).join("")}
   <div class="abs allready num" style="left:0;right:0;top:668px;text-align:center;font-size:30px;font-weight:800;letter-spacing:.5em;color:var(--teal);opacity:0">4 / 4 READY</div>
@@ -677,7 +677,7 @@ S.push({ depth: 3200, html: () => `
     <div class="cbig"><div class="cno num">STEP 0${i + 1} <span>/ 04</span></div><div class="ct">${rgb(t)}</div><div class="crole"><b>${RN[r][0]}</b><small class="num">${RN[r][1]}</small></div><div class="cd">${d}</div></div>
     <div class="cmini"><b><span class="num">0${i + 1}</span> ${t}</b><span>${RN[r][0]} · ${d}</span></div></div>`).join("")}
   <div class="abs redf" style="inset:0;opacity:0"></div>
-  <div class="content coopc" style="width:1600px;top:110px">${kick("04 — 3", "협동 사냥 예시 · 제안")}<div class="h1" style="margin-top:12px">협동은 이렇게 한다</div></div>
+  <div class="content coopc" style="width:1600px;top:110px">${kick("04 — 3", "협동 사냥 예시")}<div class="h1" style="margin-top:12px">협동은 이렇게 한다</div></div>
   <div class="extra" style="top:830px"><b>그 밖의 협동</b>${EXTRA.map((e) => `<i>${e}</i>`).join("")}</div>`,
   build(s, tl) {
     const cuts = $$(".cut", s);
@@ -873,8 +873,7 @@ S.push({ depth: 7200, html: () => `
     <div class="disp bigd" style="font-size:250px;margin-top:20px">${rgb('<span class="v">0</span> M')}</div>
     <div class="h2 hh" style="margin-top:20px;font-size:56px">바닥에 닿은 순간, 문명이 깨어났다</div>
     <div class="body pp" style="margin-top:14px;font-size:32px;color:var(--ink)">그들은 적이 아니었다. 더 아래에 잠든 것을 막고 있었다.</div>
-    <div class="num mc" style="font-size:26px;font-weight:700;letter-spacing:.5em;color:var(--red);margin-top:56px">WARNING · 초대형 반응 감지</div>
-    <div class="small" style="margin-top:22px;font-size:17px;color:var(--faint)">엔딩 반전 · 팀 확인 전 제안</div></div>`,
+    <div class="num mc" style="font-size:26px;font-weight:700;letter-spacing:.5em;color:var(--red);margin-top:56px">WARNING · 초대형 반응 감지</div></div>`,
   build(s, tl) {
     const vs = $$(".bigd .v", s), bg = $(".bg", s);
     tl.from(bg, { opacity: 0, scale: 1.25, duration: 2.4, ease: "power2.out" }, 0); rise(tl, $(".kick", s), 0.4);
