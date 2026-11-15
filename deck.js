@@ -617,8 +617,8 @@ S.push({ depth: 3200, html: () => `
 // 13b ── what the four of you actually do in a hunt (proposal, team to confirm): a character-select screen, each diver slams in and locks READY
 const RC4 = { P: "#5FE3D3", S: "#FFB547", G: "#FF4B3E", E: "#EAF2F4" };
 // [icon, name, en, line, role colour key, crew.jpg crop at 1300px wide]
-const ROLES = [["helm", "조타수", "PILOT", "잠수정 조종 · 라이트로 유인", "P", "-18px -250px"], ["cam", "촬영수", "SPOTTER", "약점을 찍어 모두에게 표시", "S", "-174px -177px"],
-  ["harpoon", "사수", "GUNNER", "작살로 약점 집중 공격", "G", "-317px -177px"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란", "E", "-694px -309px"]];
+const ROLES = [["helm", "유인러", "LURER", "라이트로 크리쳐를 유인", "P", "-18px -250px"], ["cam", "촬영수", "SPOTTER", "약점을 찍어 모두에게 표시", "S", "-174px -177px"],
+  ["harpoon", "사수", "GUNNER", "무기로 약점 집중 공격", "G", "-317px -177px"], ["kit", "정비공", "ENGINEER", "선체 수리 · 미끼로 교란", "E", "-694px -309px"]];
 S.push({ depth: 3200, html: () => `
   <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.82"></div>
   <div class="content" style="width:1600px;top:110px">${kick("04 — 2", "협동 사냥 · 제안")}<div class="h1" style="margin-top:12px">4명이 역할을 나눠 사냥한다</div></div>
@@ -647,9 +647,9 @@ S.push({ depth: 3200, html: () => `
 const CUTS = [
   ["coop_lure", "유인", "P", "라이트로 크리쳐를 동굴 밖으로 끌어낸다", "82% 50%"],
   ["coop_mark", "약점 표시", "S", "찍는 순간 약점이 4명 모두의 화면에 뜬다", "68% 50%"],
-  ["coop_strike", "집중 공격", "G", "표시된 약점 하나에 작살을 모은다", "50% 50%"],
+  ["coop_strike", "집중 공격", "G", "표시된 약점 하나에 무기를 집중한다", "50% 50%"],
   ["coop_crisis", "위기 대응", "E", "선체가 깨지면 수리, 미끼로 시선을 돌린다", "45% 50%"]];
-const RN = { P: ["조타수", "PILOT"], S: ["촬영수", "SPOTTER"], G: ["사수", "GUNNER"], E: ["정비공", "ENGINEER"] };
+const RN = { P: ["유인러", "LURER"], S: ["촬영수", "SPOTTER"], G: ["사수", "GUNNER"], E: ["정비공", "ENGINEER"] };
 const RET = (cls, x, y, label) => `<div class="ret ${cls}" style="left:${x}%;top:${y}%"><svg viewBox="-60 -60 120 120"><circle r="44" fill="none" stroke="currentColor" stroke-width="4"/><circle r="56" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="10 8"/><path d="M-60 0h30M30 0h30M0 -60v30M0 30v30" stroke="currentColor" stroke-width="4"/></svg><b class="num">${label}</b></div>`;
 const CRACK = ["M480 290 L380 120 L330 40", "M480 290 L640 180 L760 150 L900 60", "M480 290 L700 360 L860 330", "M480 290 L560 520 L520 700", "M480 290 L300 400 L140 430", "M640 180 L620 90", "M700 360 L760 470"];
 const CFX = [
@@ -831,7 +831,7 @@ S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
     rise(tl, $(".pr", s), f + 1.3);
   } });
 // encounter: eyes in the dark (the photo goes into the codex), click → the hunt costs hull
-const EN = [["유인", "조타수가 라이트로 끌어낸다"], ["약점 촬영", "촬영수가 약점을 표시한다"], ["집중 공격", "사수가 약점에 작살을 꽂는다"], ["버티고 회수", "정비공이 수리, 샘플 회수"]];
+const EN = [["유인", "유인러가 라이트로 끌어낸다"], ["약점 촬영", "촬영수가 약점을 표시한다"], ["집중 공격", "사수가 무기로 약점을 집중 공격한다"], ["버티고 회수", "정비공이 수리, 샘플 회수"]];
 S.push({ depth: 6400, pre: [100, 82, 3], html: () => `
   <div class="bg" style="background-image:url(img/boss.jpg)"></div><div class="veil" style="opacity:.86"></div><div class="shadeL"></div>${steps(3)}
   <img class="abs eyes" src="img/eyes.png" style="left:1250px;top:330px;width:340px;opacity:0">
