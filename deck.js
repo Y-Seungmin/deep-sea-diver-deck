@@ -507,7 +507,7 @@ S.push({ depth: 1840, hideHud: true, html: () => `
     <div class="team">${["DIVER 1 (나)", "DIVER 2", "DIVER 3", "DIVER 4"].map((n, k) => `<div><i style="${k === 2 ? "background:var(--amber)" : ""}"></i>${n}</div>`).join("")}</div>
     <div class="xh"></div><div class="prompt"><kbd>E</kbd> 사진 찍기<span>미확인 생명체 · 거리 18 m</span></div></div>
   <div class="abs frame"></div>
-  <div class="abs hot">${[[camIco, "카메라"], [ICON.harpoon, "작살"], [scanIco, "스캐너"], [kitIco, "수리 키트"]].map(([d, n], k) => `<div class="${k ? "" : "on"}"><span class="num">${k + 1}</span>${svgI(d)}<em>${n}</em></div>`).join("")}</div>
+  <div class="abs hot">${[[camIco, "카메라"], [ICON.harpoon, "무기"], [scanIco, "스캐너"], [kitIco, "수리 키트"]].map(([d, n], k) => `<div class="${k ? "" : "on"}"><span class="num">${k + 1}</span>${svgI(d)}<em>${n}</em></div>`).join("")}</div>
   <div class="abs dash">
     <div class="mod m1"><div class="lcd"><span class="dv num">1,700</span> m</div><div class="lbl">DEPTH</div>
       <svg class="dial" viewBox="0 0 120 120"><circle cx="60" cy="60" r="52"/><path d="M20 88A52 52 0 1 1 100 88" class="tr"/><line class="nd" x1="60" y1="60" x2="60" y2="18"/></svg><div class="lbl" style="margin-top:4px">PRESSURE <span class="num" style="color:var(--soft)">184 bar</span></div></div>
@@ -796,7 +796,7 @@ S.push({ depth: 5600, pre: [66, 93, 3], html: () => `
     <div class="inv">${INV.map(([k, n, q]) => `<div class="slot${k ? "" : " empty"}">${k ? ico(k) + `<span class="q">×${q}</span><span class="nm">${n}</span>` : ""}</div>`).join("")}</div>
     <div class="scan"><div class="ghost">${ico("vial")}</div><div class="bm"></div><div class="pct">SCAN <span class="v">0</span>%</div></div>
     <div class="upl"><div class="lb"><span>샘플 분석</span><span class="v2">0%</span></div><div class="bar"><i></i></div></div>
-    <div class="recipe"><div class="ic" style="width:200px;height:96px;background:radial-gradient(ellipse at 70% 40%,rgba(95,227,211,.25),transparent 70%),#061015">${HARP}</div><div><div class="t"><small>RECIPE UNLOCKED</small>발광 작살</div><div class="rq">발광 샘플 1 · 광석 2 · 폐품 4</div></div><div class="btn">제작</div></div>
+    <div class="recipe"><div class="ic" style="width:200px;height:96px;background:radial-gradient(ellipse at 70% 40%,rgba(95,227,211,.25),transparent 70%),#061015">${HARP}</div><div><div class="t"><small>RECIPE UNLOCKED</small>발광 무기</div><div class="rq">발광 샘플 1 · 광석 2 · 폐품 4</div></div><div class="btn">제작</div></div>
     <div class="repair"><b>REPAIR</b><span>폐품 4개로 선체 수리</span><div class="bar"><i></i></div><em class="hv">HULL 66%</em></div></div>`,
   build(s, tl) {
     tl.from($(".bg", s), { opacity: 0, duration: 1.2 }, 0);
